@@ -1,4 +1,7 @@
-
+## Question: How do types of crime vary throughout the day in New York city?
+### in a given area
+### time of day
+### type of crime
 
 # A3 Starter template
 

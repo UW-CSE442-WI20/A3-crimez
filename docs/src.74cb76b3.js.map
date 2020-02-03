@@ -1,0 +1,1 @@
+{"version":3,"sources":["index.js"],"names":["d3","csv","data","console","log"],"mappings":";AAAAA,GAAGC,IAAI,eAAgB,SAASC,GAC9BC,QAAQC,IAAI,OAGdD,QAAQC,IAAI","file":"src.74cb76b3.js","sourceRoot":"../src","sourcesContent":["d3.csv(\"datatest.csv\", function(data) {\n  console.log(\"!\");\n});\n\nconsole.log('hello world');\n"]}

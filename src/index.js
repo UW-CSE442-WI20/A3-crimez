@@ -28,18 +28,21 @@ d3.json("./data/boroughs.geojson", function (error, nyb) {
 		.selectAll(".state")
 		.data(nyb.features)
 		.enter().append("path")
-		.attr("class", function (d) { return d.properties.name; })
+		.attr("class", function (d) { return d.properties.BoroName; })
 		.attr("d", path)
 		.on("mouseover", function(d){
 			console.log(d)
 			tooltip.style("visibility", "visible");
 		})
 		.on("mousemove", function(d){
+			d3.select(this).style("fill", "orange")
 			tooltip.style("top", (d3.event.pageY-10)+"px").style("left",(d3.event.pageX+10)+"px")
 			       .text(d.properties.BoroName);
 		})
 		.on("mouseout", function(){
+			d3.select(this).style("fill", "steelblue")
 			tooltip.style("visibility", "hidden");
+			
 		});
 
 });

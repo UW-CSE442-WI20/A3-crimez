@@ -1,0 +1,9 @@
+#boroughs {
+        stroke: lightgrey;
+        stroke-width: 1px;
+        fill: steelblue;
+}
+
+.bar-chart {
+    background-color: #cccccc;
+}

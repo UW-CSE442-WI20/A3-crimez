@@ -1,8 +1,16 @@
-## Question: How do types of crime vary throughout the day in New York city?
-### in a given area
-### time of day
-### type of crime
+## Question: What does the distribution of crime look like in NYC in 2014-2015 (time and place)?
+#### visualizations:
+- map showing amount of crime per area
+  - time
+  - based on crime
+  - based on type of place
 
+- bar graphs (maybe)   
+
+#### How to run our code localhost???
+py -2 -m SimpleHTTPServer
+
+-------------------------------------------------------------------
 # A3 Starter template
 
 The starter code for creating interactive visualization prototypes.

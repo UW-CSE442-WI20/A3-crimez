@@ -15,34 +15,99 @@ var path = d3.geoPath()
 // Data and color scale
 var data = d3.map();
 var colorScale = d3.scaleThreshold()
-  .domain([1, 2, 3, 4, 5])
-  .range(d3.schemeBlues[7]);
+	.domain([1, 2, 3, 4, 5])
+	.range(d3.schemeBlues[6]);
+
+Promise.all([
+	d3.json("./data/boroughs.geojson"),	
+	d3.json("https://data.cityofnewyork.us/resource/5uac-w243.json"),
+]).then(
+	function ready(topo, reg) {
+		console.log(topo);
+	//   Draw the map
+	  svg.append("g")
+	    .selectAll("path")
+	    .data(topo[0].features)
+	    .enter()
+	    .append("path")
+	      // draw each country
+	      .attr("d", d3.geoPath()
+	        .projection(projection)
+		  )
+	
+	      // set the color of each country
+	      .attr("fill", function (d) {
+			  //TODO: group by borough and count number of reports 
+			  counts = {}
+			  for(var i = 0; i < topo[1].length; i++){
+	
+				 if (counts[topo[1][i].boro_nm]) {
+					counts[topo[1][i].boro_nm] += 1
+				 } else{
+					counts[topo[1][i].boro_nm] = 1
+				 }
+			  }
+	
+			  console.log(counts);
+	        // d.total = data.get(d.id) || 0;
+	        return colorScale(d.properties.BoroCode);
+	      });
+	}).catch(function(err){
+			console.log(err)
+		}
+	) 
+
 
 // Load external data and boot
-d3.queue()
-  .defer(d3.json, "./data/boroughs.geojson")
-  .defer(d3.csv, "https://data.cityofnewyork.us/resource/5uac-w243.csv")
-  .await(ready);
+// d3.queue()
+//   .defer(d3.json, "./data/boroughs.geojson")
+//   .defer(d3.json, "https://data.cityofnewyork.us/resource/5uac-w243.json")
+//   .await(ready);
 
-function ready(error, topo) {
+// function ready(error, topo, reg) {
 
-  // Draw the map
-  svg.append("g")
-    .selectAll("path")
-    .data(topo.features)
-    .enter()
-    .append("path")
-      // draw each country
-      .attr("d", d3.geoPath()
-        .projection(projection)
-      )
-      // set the color of each country
-      .attr("fill", function (d) {
-		  console.log(d)
-        // d.total = data.get(d.id) || 0;
-        return colorScale(d.properties.BoroCode);
-      });
-    }
+// 	console.log(reg);
+//   // Draw the map
+//   svg.append("g")
+//     .selectAll("path")
+//     .data(topo.features)
+//     .enter()
+//     .append("path")
+//       // draw each country
+//       .attr("d", d3.geoPath()
+//         .projection(projection)
+// 	  )
+
+//       // set the color of each country
+//       .attr("fill", function (d) {
+// 		  //TODO: group by borough and count number of reports 
+// 		  counts = {}
+// 		  for(var i = 0; i < reg.length; i++){
+
+// 			 if (counts[reg[i].boro_nm]) {
+// 				counts[reg[i].boro_nm] += 1
+// 			 } else{
+// 				counts[reg[i].boro_nm] = 1
+// 			 }
+// 		  }
+
+// 		  console.log(counts);
+//         // d.total = data.get(d.id) || 0;
+//         return colorScale(d.properties.BoroCode);
+//       });
+//     }
+
+//WHAT d RETURNS
+// type: "Feature"
+// id: 4
+// properties:
+// BoroCode: 2
+// BoroName: "Bronx"
+// Shape_Leng: 464517.89055
+// Shape_Area: 1186804144.79
+// __proto__: Object
+// geometry: {type: "MultiPolygon", coordinates: Array(24)}
+
 
 // svg = d3.select("body").append("svg")
 // 	.attr("width", width)

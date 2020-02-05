@@ -12,11 +12,12 @@ var projection = d3.geoMercator()
 var path = d3.geoPath()
 	.projection(projection);
 
+var inputValue = "January";
+var dates = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+
 // Data and color scale
 var data = d3.map();
 var colorScale = d3.scaleThreshold()
-	.domain([1000, 50000, 10000, 50000, 60000, 70000, 80000, 90000, 100000])
-	.range(d3.schemePurples[9]);
 
 var boroughName = function(d) {
 	d.properties.BoroName.replace(/ /g, '');
@@ -77,17 +78,25 @@ Promise.all([
 	d3.csv("./data/nyc_crimez_filtered.csv"),
 ]).then(
 	(data, reg) => {
-		counts = {}
+		months = {}
 		let geo_data = data[0]
 		let crime_data = data[1]
 
 		for(var i = 0; i < crime_data.length; i++){
-
-			if (counts[crime_data[i]["BORO_NM"]]) {
-			  counts[crime_data[i]["BORO_NM"]] += 1
-		   } else{
-			  counts[crime_data[i]["BORO_NM"]] = 1
-		   }
+            var date = crime_data[i]["CMPLNT_FR_DT"]
+            var parts = date.split("/")
+            var month = dates[parts[0]-1]
+            var name = [crime_data[i]["BORO_NM"]]
+            if (months[month]) {
+                if (months[month][name]) {
+                    months[month][name] += 1
+                } else {
+                    months[month][name] = 1
+                }
+            } else {
+                months[month] = {}
+                months[month][name] = 1
+            }
 		}
 
 		// Draw the map
@@ -99,15 +108,36 @@ Promise.all([
 			// draw each country
 			.attr("d", d3.geoPath().projection(projection))
 		        .attr("id", (d) => boroughName(d))
-		
-			// set the color of each country
-			.attr("fill", function (d) {
-				return colorScale(counts[d.properties.BoroName.toUpperCase()]);
-			})
-			.attr("class", function(d){ return "Borough" } )
+	
+	      // set the color of each country
+	      .attr("fill", function (d) {
+			  //TODO: group by borough and count number of reports 
+	        // d.total = data.get(d.id) || 0;
+	        return initialDate(d);
+		  })
+		  .attr("class", function(d){ return "Borough" } )
 			.on("mouseover", mouseOver)
 			.on("mousemove", mouseMove)
 			.on("mouseout", mouseOut);
+
+	d3.select("#timeslide").on("input", function() {
+    	update(+this.value);
+	});
+
+	function update(value) {
+    	document.getElementById("range").innerHTML=dates[value];
+    	inputValue = dates[value];
+    	d3.selectAll(".incident")
+        	.attr("fill", initialDate);
+	}
+
+	function initialDate(d){
+    	var name = d.properties.BoroName.toUpperCase();
+    	console.log(months)
+		var c = months[inputValue][name];
+		return colorScale(c);
+	}
+
 	}).catch(function(err){
 			console.log(err)
 		}

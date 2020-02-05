@@ -18,6 +18,8 @@ var dates = ["January", "February", "March", "April", "May", "June", "July", "Au
 // Data and color scale
 var data = d3.map();
 var colorScale = d3.scaleThreshold()
+	.domain([1, 100, 1000, 3000, 6000])
+	.range(d3.schemePurples[5]);
 
 var boroughName = function(d) {
 	d.properties.BoroName.replace(/ /g, '');
@@ -45,7 +47,7 @@ let mouseOver = function(d) {
 		.transition()
 		.duration(200)
 	        .style("visibility", "visible")
-		.text(d.properties.BoroName + ": " +  counts[d.properties.BoroName.toUpperCase()] + " crimes");
+		.text(d.properties.BoroName + ": " +  months[inputValue][d.properties.BoroName.toUpperCase()] + " crimes");
 }
 
 let mouseMove = function(d) {
@@ -61,7 +63,7 @@ let mouseMove = function(d) {
 		.style("stroke", "black")
 	tooltip.style("top", (d3.event.pageY - 10) + "px")
 		.style("left", (d3.event.pageX + 10) + "px")
-		.text(d.properties.BoroName + ": " +  counts[d.properties.BoroName.toUpperCase()] + " crimes");
+		.text(d.properties.BoroName + ": " +  months[inputValue][d.properties.BoroName.toUpperCase()] + " crimes");
 }
 
 let mouseOut = function(d) {

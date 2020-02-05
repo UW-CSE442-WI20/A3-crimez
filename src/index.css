@@ -1,9 +1,6 @@
-#boroughs {
-        stroke: lightgrey;
-        stroke-width: 1px;
-        fill: steelblue;
+.tooltip {
+    padding: 4px;
+    font-family: Arial;
+    background-color: white;
 }
 
-.bar-chart {
-    background-color: #cccccc;
-}

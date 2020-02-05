@@ -6,3 +6,8 @@
     color: white;
 }
 
+#sliderContainer {
+    text-align: center;
+    position: relative;
+    top: 600px;
+}

@@ -129,7 +129,7 @@ Promise.all([
 	function update(value) {
     	document.getElementById("range").innerHTML=dates[value];
     	inputValue = dates[value];
-    	d3.selectAll(".incident")
+    	d3.selectAll(".Borough")
         	.attr("fill", initialDate);
 	}
 

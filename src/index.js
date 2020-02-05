@@ -44,37 +44,63 @@ Promise.all([
 		   }
 		}
 
-	//   Draw the map
-	  svg.append("g")
-	    .selectAll("path")
-	    .data(geo_data.features)
-	    .enter()
-	    .append("path")
-	      // draw each country
-	      .attr("d", d3.geoPath()
-	        .projection(projection)
-		  )
-	
-	      // set the color of each country
-	      .attr("fill", function (d) {
-			  //TODO: group by borough and count number of reports 
+		let mouseOver = function(d) {
+			d3.selectAll(".Borough")
+			  .transition()
+			  .duration(200)
+			  .style("opacity", .5)
+			d3.select(this)
+			  .transition()
+			  .duration(200)
+			  .style("opacity", 1)
+			  .style("stroke", "black")
+		  }
+		
+		  let mouseLeave = function(d) {
+			d3.selectAll(".Borough")
+			  .transition()
+			  .duration(200)
+			  .style("opacity", .8)
+			d3.select(this)
+			  .transition()
+			  .duration(200)
+			  .style("stroke", "transparent")
+		  }
 
-	        // d.total = data.get(d.id) || 0;
-	        return colorScale(counts[d.properties.BoroName.toUpperCase()]);
-		  })
-		  .on("mouseover", function (d) {
-			  tooltip.style("visibility", "visible");
-		  })
-		  .on("mousemove", function (d) {
-			  d3.select(this).style("fill", "lightgrey");
-			  tooltip.style("top", (d3.event.pageY - 10) + "px")
-				 .style("left", (d3.event.pageX + 10) + "px")
-				 .text(d.properties.BoroName + ": " +  counts[d.properties.BoroName.toUpperCase()] + " crimes");
-		  })
-		  .on("mouseout", function (d) {
-			  d3.select(this).style("fill", colorScale(counts[d.properties.BoroName.toUpperCase()]));
-			  tooltip.style("visibility", "hidden")
-		  });
+		// Draw the map
+		svg.append("g")
+			.selectAll("path")
+			.data(geo_data.features)
+			.enter()
+			.append("path")
+			// draw each country
+			.attr("d", d3.geoPath()
+				.projection(projection)
+			)
+		
+			// set the color of each country
+			.attr("fill", function (d) {
+				//TODO: group by borough and count number of reports 
+
+				// d.total = data.get(d.id) || 0;
+				return colorScale(counts[d.properties.BoroName.toUpperCase()]);
+			})
+			.attr("class", function(d){ return "Borough" } )
+			.on("mouseover", mouseOver)
+			// function (d) {
+			// 	// tooltip.style("visibility", "visible");
+			// })
+			.on("mousemove", function (d) {
+				d3.select(this)//.style("fill", "lightgrey");
+				tooltip.style("top", (d3.event.pageY - 10) + "px")
+					.style("left", (d3.event.pageX + 10) + "px")
+					.text(d.properties.BoroName + ": " +  counts[d.properties.BoroName.toUpperCase()] + " crimes");
+			})
+			.on("mouseleave", mouseLeave);
+			// .on("mouseout", function (d) {
+			// 	d3.select(this).style("fill", colorScale(counts[d.properties.BoroName.toUpperCase()]));
+			// 	tooltip.style("visibility", "hidden")
+			// });
 	}).catch(function(err){
 			console.log(err)
 		}

@@ -21,6 +21,10 @@ var colorScale = d3.scaleThreshold()
 	.domain([1, 100, 1000, 3000, 6000])
 	.range(d3.schemePurples[5]);
 
+var boroughName = function(d) {
+	d.properties.BoroName.replace(/ /g, '');
+}
+
 var tooltip = d3.select("body")
 	.append("div")
         .attr("class", "tooltip")
@@ -28,10 +32,52 @@ var tooltip = d3.select("body")
 	.style("z-index", "10")
 	.style("visibility", "hidden");
 
+let mouseOver = function(d) {
+	d3.selectAll(".Borough:not(#" + boroughName(d)+ ")")
+		.transition()
+		.duration(200)
+		.style("opacity", .2)
+	d3.select(this)
+		.transition()
+		.duration(200)
+		.style("opacity", 1)
+		.style("stroke", "black")
+	tooltip.style("top", (d3.event.pageY - 10) + "px")
+		.style("left", (d3.event.pageX + 10) + "px")
+		.transition()
+		.duration(200)
+	        .style("visibility", "visible")
+		.text(d.properties.BoroName + ": " +  months[inputValue][d.properties.BoroName.toUpperCase()] + " crimes");
+}
+
+let mouseMove = function(d) {
+	d3.selectAll(".Borough:not(#" + boroughName(d) + ")")
+		.transition()
+		.duration(200)
+		.style("opacity", 0.2)
+		.style("stroke", "transparent")
+	d3.select(this)
+		.transition()
+		.duration(200)
+		.style("opacity", 1)
+		.style("stroke", "black")
+	tooltip.style("top", (d3.event.pageY - 10) + "px")
+		.style("left", (d3.event.pageX + 10) + "px")
+		.text(d.properties.BoroName + ": " +  months[inputValue][d.properties.BoroName.toUpperCase()] + " crimes");
+}
+
+let mouseOut = function(d) {
+	d3.selectAll(".Borough")
+		.transition()
+		.duration(100)
+		.style("opacity", 1)
+		.style("stroke", "transparent")
+	tooltip.style("visibility", "hidden")
+}
+
 Promise.all([
 	d3.json("./data/boroughs.geojson"),	
 	d3.csv("./data/nyc_crimez_filtered.csv"),
-	// d3.json("https://data.cityofnewyork.us/resource/5uac-w243.json"),
 ]).then(
 	(data, reg) => {
 		months = {}
@@ -55,17 +101,15 @@ Promise.all([
             }
 		}
 
-
-	//   Draw the map
-	svg.append("g")
-	    .selectAll("path")
-	    .data(geo_data.features)
-	    .enter()
-	    .append("path")
-	      // draw each country
-	      .attr("d", d3.geoPath()
-	        .projection(projection)
-		  )
+		// Draw the map
+		svg.append("g")
+			.selectAll("path")
+			.data(geo_data.features)
+			.enter()
+			.append("path")
+			// draw each country
+			.attr("d", d3.geoPath().projection(projection))
+		        .attr("id", (d) => boroughName(d))
 	
 	      // set the color of each country
 	      .attr("fill", function (d) {
@@ -73,19 +117,10 @@ Promise.all([
 	        // d.total = data.get(d.id) || 0;
 	        return initialDate(d);
 		  })
-		  .on("mouseover", function (d) {
-			  tooltip.style("visibility", "visible");
-		  })
-		  .on("mousemove", function (d) {
-			  d3.select(this).style("fill", "lightgrey");
-			  tooltip.style("top", (d3.event.pageY - 10) + "px")
-				 .style("left", (d3.event.pageX + 10) + "px")
-				 .text(d.properties.BoroName + ": " + months[inputValue][d.properties.BoroName.toUpperCase()]  + " crimes");
-		  })
-		  .on("mouseout", function (d) {
-			  d3.select(this).style("fill", initialDate);
-			  tooltip.style("visibility", "hidden")
-		  });
+		  .attr("class", function(d){ return "Borough" } )
+			.on("mouseover", mouseOver)
+			.on("mousemove", mouseMove)
+			.on("mouseout", mouseOut);
 
 	d3.select("#timeslide").on("input", function() {
     	update(+this.value);

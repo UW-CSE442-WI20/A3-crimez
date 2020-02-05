@@ -1,6 +1,8 @@
 .tooltip {
-    padding: 4px;
+    padding: 8px;
     font-family: Arial;
-    background-color: white;
+    background-color: black;
+    opacity: .7;
+    color: white;
 }
 

@@ -30,7 +30,16 @@ Promise.all([
 	// d3.json("https://data.cityofnewyork.us/resource/5uac-w243.json"),
 ]).then(
 	function ready(topo, reg) {
-		console.log(topo[1][0]);
+		counts = {}
+		for(var i = 0; i < topo[1].length; i++){
+
+		   if (counts[topo[1][i]["BORO_NM"]]) {
+			  counts[topo[1][i]["BORO_NM"]] += 1
+		   } else{
+			  counts[topo[1][i]["BORO_NM"]] = 1
+		   }
+		}
+
 	//   Draw the map
 	  svg.append("g")
 	    .selectAll("path")
@@ -45,18 +54,7 @@ Promise.all([
 	      // set the color of each country
 	      .attr("fill", function (d) {
 			  //TODO: group by borough and count number of reports 
-			  counts = {}
-			  for(var i = 0; i < topo[1].length; i++){
-	
-				 if (counts[topo[1][i]["BORO_NM"]]) {
-					counts[topo[1][i]["BORO_NM"]] += 1
-				 } else{
-					counts[topo[1][i]["BORO_NM"]] = 1
-				 }
-			  }
-	
-			  console.log(counts);
-			  console.log(d.properties.BoroName.toUpperCase());
+
 	        // d.total = data.get(d.id) || 0;
 	        return colorScale(counts[d.properties.BoroName.toUpperCase()]);
 		  })

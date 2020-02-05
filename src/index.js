@@ -15,15 +15,16 @@ var path = d3.geoPath()
 // Data and color scale
 var data = d3.map();
 var colorScale = d3.scaleThreshold()
-	.domain([1, 2, 3, 4, 5])
-	.range(d3.schemeBlues[6]);
+	.domain([10000, 20000, 30000, 40000, 50000, 60000, 70000, 80000,90000,100000])
+	.range(d3.schemeBlues[8]);
 
 Promise.all([
 	d3.json("./data/boroughs.geojson"),	
-	d3.json("https://data.cityofnewyork.us/resource/5uac-w243.json"),
+	d3.csv("./data/nyc_crimez_filtered.csv"),
+	// d3.json("https://data.cityofnewyork.us/resource/5uac-w243.json"),
 ]).then(
 	function ready(topo, reg) {
-		console.log(topo);
+		console.log(topo[1][0]);
 	//   Draw the map
 	  svg.append("g")
 	    .selectAll("path")
@@ -41,16 +42,17 @@ Promise.all([
 			  counts = {}
 			  for(var i = 0; i < topo[1].length; i++){
 	
-				 if (counts[topo[1][i].boro_nm]) {
-					counts[topo[1][i].boro_nm] += 1
+				 if (counts[topo[1][i]["BORO_NM"]]) {
+					counts[topo[1][i]["BORO_NM"]] += 1
 				 } else{
-					counts[topo[1][i].boro_nm] = 1
+					counts[topo[1][i]["BORO_NM"]] = 1
 				 }
 			  }
 	
 			  console.log(counts);
+			  console.log(d.properties.BoroName.toUpperCase());
 	        // d.total = data.get(d.id) || 0;
-	        return colorScale(d.properties.BoroCode);
+	        return colorScale(counts[d.properties.BoroName.toUpperCase()]);
 	      });
 	}).catch(function(err){
 			console.log(err)

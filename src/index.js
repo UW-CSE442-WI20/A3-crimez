@@ -15,8 +15,14 @@ var path = d3.geoPath()
 // Data and color scale
 var data = d3.map();
 var colorScale = d3.scaleThreshold()
-	.domain([10000, 20000, 30000, 40000, 50000, 60000, 70000, 80000,90000,100000])
-	.range(d3.schemeBlues[8]);
+	.domain([10000, 25000, 50000, 75000, 100000])
+	.range(d3.schemeBlues[5]);
+
+var tooltip = d3.select("body")
+	.append("div")
+	.style("position", "absolute")
+	.style("z-index", "10")
+	.style("visibility", "hidden");
 
 Promise.all([
 	d3.json("./data/boroughs.geojson"),	
@@ -53,7 +59,10 @@ Promise.all([
 			  console.log(d.properties.BoroName.toUpperCase());
 	        // d.total = data.get(d.id) || 0;
 	        return colorScale(counts[d.properties.BoroName.toUpperCase()]);
-	      });
+		  })
+		  .on("mouseover", function (d) {
+			  tooltip.style("visibility", "visible");
+		  });
 	}).catch(function(err){
 			console.log(err)
 		}

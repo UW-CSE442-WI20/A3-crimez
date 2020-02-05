@@ -30,21 +30,24 @@ Promise.all([
 	d3.csv("./data/nyc_crimez_filtered.csv"),
 	// d3.json("https://data.cityofnewyork.us/resource/5uac-w243.json"),
 ]).then(
-	function ready(topo, reg) {
+	(data, reg) => {
 		counts = {}
-		for(var i = 0; i < topo[1].length; i++){
+		let geo_data = data[0]
+		let crime_data = data[1]
 
-			if (counts[topo[1][i]["BORO_NM"]]) {
-			  counts[topo[1][i]["BORO_NM"]] += 1
+		for(var i = 0; i < crime_data.length; i++){
+
+			if (counts[crime_data[i]["BORO_NM"]]) {
+			  counts[crime_data[i]["BORO_NM"]] += 1
 		   } else{
-			  counts[topo[1][i]["BORO_NM"]] = 1
+			  counts[crime_data[i]["BORO_NM"]] = 1
 		   }
 		}
 
 	//   Draw the map
 	  svg.append("g")
 	    .selectAll("path")
-	    .data(topo[0].features)
+	    .data(geo_data.features)
 	    .enter()
 	    .append("path")
 	      // draw each country

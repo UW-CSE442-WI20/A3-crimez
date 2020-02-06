@@ -6,14 +6,8 @@
   - based on type of place
 - bar graph  
 
-### How to run our code locally
-
-For Windows: py -2 -m SimpleHTTPServer
-
-For Mac: python -m SimpleHTTPServer
-
 ### TODOs
-- [ ] Connect checkboxes to filtering data 
+- [ ] Connect checkboxes to filtering data (@heather)
 - [ ] adjust bar chart to show type of residence of crime (@amir)
 - [ ] add check box option to time so you can view all the months (@emma)
 - [ ] make color scale dynamic and add dynamic color legend (@kushal)
@@ -21,6 +15,12 @@ For Mac: python -m SimpleHTTPServer
 ### Current Branches in use
  - master: map and slider with dynamic updates
  - filterByCrime: Also has filtering checkboxes and static bar chart
+ 
+### How to run our code locally
+
+For Windows: py -2 -m SimpleHTTPServer
+
+For Mac: python -m SimpleHTTPServer
 
 ### Our site
 

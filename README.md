@@ -7,9 +7,8 @@
 - bar graph  
 
 ### TODOs
-- [ ] Connect checkboxes to filtering data (@heather)
+- [ ] Connect checkboxes to filtering data (@heather/@emma)
 - [ ] adjust bar chart to show type of residence of crime (@amir)
-- [ ] add check box option to time so you can view all the months (@emma)
 - [ ] make color scale dynamic and add dynamic color legend (@kushal)
 
 ### Current Branches in use

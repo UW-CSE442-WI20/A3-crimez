@@ -1,8 +1,12 @@
 var width = 960, height = 500;
 
-svg = d3.select("body").append("svg")
+console.warn(d3.select("#container"));
+
+var svg = d3.select("#container")
+	.append("svg")
 	.attr("width", width)
 	.attr("height", height);
+
 
 var projection = d3.geoMercator()
 	.center([-73.94, 40.70])
@@ -30,11 +34,11 @@ Promise.all([
 	d3.csv("./data/nyc_crimez_filtered.csv"),
 	// d3.json("https://data.cityofnewyork.us/resource/5uac-w243.json"),
 ]).then(
-	(data, reg) => {
+	(data) => {
 		counts = {}
 		let geo_data = data[0]
 		let crime_data = data[1]
-
+		
 		for(var i = 0; i < crime_data.length; i++){
 
 			if (counts[crime_data[i]["BORO_NM"]]) {
@@ -75,6 +79,8 @@ Promise.all([
 			  d3.select(this).style("fill", colorScale(counts[d.properties.BoroName.toUpperCase()]));
 			  tooltip.style("visibility", "hidden")
 		  });
+
+		  console.log("made it");
 	}).catch(function(err){
 			console.log(err)
 		}

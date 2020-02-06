@@ -80,7 +80,7 @@ Promise.all([
 		let geo_data = data[0]
 		let crime_data = data[1]
 
-		crime_types = {}
+		crime_location = {}
 		
 		// calculate month hash
 		for(var i = 0; i < crime_data.length; i++){
@@ -98,10 +98,10 @@ Promise.all([
 				months[month] = {}
 				months[month][name] = 1
 			}
-			if (crime_types[crime_data[i]["OFNS_DESC"]]) {
-				crime_types[crime_data[i]["OFNS_DESC"]] += 1
+			if (crime_location[crime_data[i]["PREM_TYP_DESC"]]) {
+				crime_location[crime_data[i]["PREM_TYP_DESC"]] += 1
 			} else {
-				crime_types[crime_data[i]["OFNS_DESC"]] = 1
+				crime_location[crime_data[i]["PREM_TYP_DESC"]] = 1
 			}
 
 		}
@@ -146,23 +146,28 @@ Promise.all([
 
 		// convert crimes_types hash to array of hashes
 		// probably a better way to do all this
-		var crimes = new Array(Object.keys(crime_types).length);
+		var crimes = new Array(Object.keys(crime_location).length);
 		i = 0
-		Object.keys(crime_types).forEach(function (key) { 
-			var value = crime_types[key]
+		Object.keys(crime_location).forEach(function (key) { 
+			var value = crime_location[key]
 			crimes[i] = { "type": key, "count": value }
 			i++
 		})
+		// sort the locations based on count, in ascending order
+		crimes.sort((a,b) => (a.count > b.count) ? -1 : ((b.count > a.count) ? 1 : 0));
 		
+		//get the top 5 locations
+		sliced = crimes.slice(0,5);
+
 		// bar graph setup
 		const yScale = d3.scaleLinear()
 			.range([300, 0])
 		        // 60000 should be max of displayed counts
-			.domain([0, 60000]);
+			.domain([0, 110000]);
 
 		const xScale = d3.scaleBand()
-			.range([0, 500])
-		        .domain(crime_data.map((d) => d.OFNS_DESC))
+			.range([0, 800])
+		        .domain(sliced.map((d) => d.type))
 			.padding(0.2)
 
 		const chart = d3.select("#bar").append('g')
@@ -179,7 +184,7 @@ Promise.all([
 
 		// bars
 		chart.selectAll()
-			.data(crimes)
+			.data(sliced)
 			.enter()
 			.append('rect')
 			.attr('x', (d) => xScale(d.type))
@@ -187,6 +192,7 @@ Promise.all([
 			.attr('y', (d) => yScale(d.count))
 			.attr('height', (d) => 300 - yScale(d.count))
 			.attr('width', xScale.bandwidth())
+			
 
 	}).catch(function(err){
 		console.log(err)

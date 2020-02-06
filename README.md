@@ -1,27 +1,35 @@
 ## Question: What does the distribution of crime look like in NYC in 2014-2015 (time and place)?
-#### visualizations:
+#### Visualizations
 - map showing amount of crime per area
   - time
   - based on crime
   - based on type of place
+- bar graph  
 
-- bar graphs (maybe)   
+#### How to run our code locally
 
-#### How to run our code localhost???
-py -2 -m SimpleHTTPServer
+For Windows: py -2 -m SimpleHTTPServer
+
+For Mac: python -m SimpleHTTPServer
+
+### TODOs
+- [ ] Connect checkboxes to filtering data 
+- [ ] adjust bar chart to show type of residence of crime (@amir)
+- [ ] add check box option to time so you can view all the months (@emma)
+- [ ] make color scale dynamic and add dynamic color legend (@kushal)
+
+### Current Branches in use
+ - master: map and slider with dynamic updates
+ - filterByCrime: Also has filtering checkboxes and static bar chart
+
+### Our site
+
+See the live site at: [UW-CSE442-WI20.github.io/A3-crimez/](https://uw-cse442-wi20.github.io/A3-crimez/)
 
 -------------------------------------------------------------------
 # A3 Starter template
 
 The starter code for creating interactive visualization prototypes.
-
-## Getting Started
-
-This repo is set up to use the [Parcel](https://parceljs.org/) bundler. If you don't
-like the way we've set things up, feel free to change it however you like!
-
-The only restriction is that __your final HTML/CSS/JS output must be stored in the "docs" folder__ so that
-GitHub knows how to serve it as a static site.
 
 ### Install
 
@@ -38,27 +46,8 @@ and it will install all of the project-specific dependencies (if you're curious 
 
 npm is the _node package manager_.
 
-### Running the local dev server
-
-To run the project locally, run `npm start` and it will be available at http://localhost:1234/.
-
-### Building the final output
-
-Run `npm run build` and all of your assets will be compiled and placed into the `docs/` folder. Note
-that this command will overwrite the existing docs folder.
-
-Once pushed to GitHub, the output should be available at UW-CSE442-WI20.github.io/your-repo-name/
-
-
 ## Other notes
 
 ### Using 3rd party libraries
 
-You are more than welcome to use open source packages such as D3.js, just make sure to cite these.
-
-To add a new one run `npm install --save <library-name>`, e.g. `npm install --save d3`. This will
-add the library locally so it is available for use in your JS files. It will also add `d3` to the
-list of dependencies in `package.json`.
-
-_Note that if you install a library your teammates will need to install it too. Once the dep is added
-to `package.json` simply running `npm install` in this directory will download the new dependency._
+Using [D3.js](https://d3js.org/)

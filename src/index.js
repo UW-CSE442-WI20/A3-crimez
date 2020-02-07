@@ -24,6 +24,11 @@ var colorScale = d3.scaleThreshold()
 	.domain([1, 5000, 8000, 10000, 20000])
 	.range(d3.schemePurples[5]);
 
+var legendColor = d3.legendColor()
+    .labelFormat(d3.format(".0f"))
+    .labels(d3.legendHelpers.thresholdLabels)
+    .scale(colorScale);
+
 var boroughName = function (d) {
 	d.properties.BoroName.replace(/ /g, '');
 }
@@ -246,11 +251,11 @@ Promise.all([
 			.data(geo_data.features)
 			.enter()
 			.append("path")
-			// draw each country
+		// draw each country
 			.attr("d", d3.geoPath().projection(projection))
 			.attr("id", (d) => boroughName(d))
 
-			// set the color of each country
+		// set the color of each country
 			.attr("fill", function (d) {
 				return initialDate(d);
 			})
@@ -258,7 +263,17 @@ Promise.all([
 			.on("mouseover", mapMouseOver)
 			.on("mousemove", mapMouseMove)
 			.on("mouseout", mapMouseOut);
-			
+
+		// Draw the legend
+		legend = d3.select("#map").append("g")
+			.attr("transform", "translate(500,10)")
+			.call(legendColor);
+
+		var legend = d3.legendColor()
+			.scale(colorScale)
+			.labelFormat(d3.format(".0f"))
+			.title("Legend");
+
 		// slider 
 		d3.select("#timeslide").on("input", function () {
 			update(+this.value);
@@ -319,7 +334,6 @@ Promise.all([
 		// bar graph setup
 		const yScale = d3.scaleLinear()
 			.range([200, 0])
-			// 60000 should be max of displayed counts
 			.domain([0, 110000]);
 
 		const xScale = d3.scaleBand()
@@ -352,7 +366,6 @@ Promise.all([
 			.enter()
 			.append('rect')
 			.attr('x', (d) => xScale(d.type))
-			// add dynamic counting for this value
 			.attr('y', (d) => yScale(d.count))
 			.attr('height', (d) => 200 - yScale(d.count))
 			.attr('width', xScale.bandwidth())

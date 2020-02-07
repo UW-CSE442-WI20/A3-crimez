@@ -6,7 +6,6 @@ var projection = d3.geoMercator()
 var path = d3.geoPath()
 	.projection(projection);
 
-var viewAll = false;
 var inputValue = "January";
 var dates = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 
@@ -21,19 +20,6 @@ var boroughName = function(d) {
 }
 var locationName = function(d) {
 	d.type.replace(/ /g, '');
-}
-
-var getText = function(d) {
-	var name = d.properties.BoroName;
-    if (d3.select("#timecheck").property("checked")) {
-    	var c = 0;
-        for (var i = 0; i < dates.length; i++) {
-        	c += months[dates[i]][name.toUpperCase()];
-        }
-        return (name + ": " + c + " crimes")
-    } else {
-        return (name + ": " +  months[inputValue][name.toUpperCase()] + " crimes")
-    }
 }
 
 var tooltip = d3.select("body")
@@ -59,7 +45,7 @@ let mapMouseOver = function(d) {
 		.transition()
 		.duration(200)
 	        .style("visibility", "visible")
-			.text(getText(d))
+		.text(d.properties.BoroName + ": " +  months[inputValue][d.properties.BoroName.toUpperCase()] + " crimes");
 }
 
 let mapMouseMove = function(d) {
@@ -75,7 +61,7 @@ let mapMouseMove = function(d) {
 		.style("stroke", "black")
 	tooltip.style("top", (d3.event.pageY - 10) + "px")
 		.style("left", (d3.event.pageX + 10) + "px")
-		.text(getText(d))
+		.text(d.properties.BoroName + ": " +  months[inputValue][d.properties.BoroName.toUpperCase()] + " crimes");
 }
 
 let mapMouseOut = function(d) {
@@ -91,7 +77,7 @@ let mapMouseOut = function(d) {
 
 // graph mouse animations
 let chartMouseOver = function(d) {
-	d3.selectAll(".type:not(#" + locationName(d)+ ")")
+	d3.selectAll(".Bar:not(#" + locationName(d)+ ")")
 		.transition()
 		.duration(200)
 		.style("opacity", .2)
@@ -105,11 +91,11 @@ let chartMouseOver = function(d) {
 		.transition()
 		.duration(200)
 	        .style("visibility", "visible")
-		.text(d.type + ": " +  d.count + " crimes");
+		.text(d.count + " crimes");
 }
 
 let chartMouseMove = function(d) {
-	d3.selectAll(".type:not(#" + locationName(d) + ")")
+	d3.selectAll(".Bar:not(#" + locationName(d) + ")")
 		.transition()
 		.duration(200)
 		.style("opacity", 0.2)
@@ -121,11 +107,11 @@ let chartMouseMove = function(d) {
 		.style("stroke", "black")
 	tooltip.style("top", (d3.event.pageY - 10) + "px")
 		.style("left", (d3.event.pageX + 10) + "px")
-		.text(d.type + ": " +  d.count + " crimes");
+		.text(d.count + " crimes");
 }
 
 let chartMouseOut = function(d) {
-	d3.selectAll(".type")
+	d3.selectAll(".Bar")
 		.transition()
 		.duration(100)
 		.style("opacity", 1)
@@ -187,46 +173,23 @@ Promise.all([
 			.attr("class", function(d){ return "Borough" } )
 			.on("mouseover", mapMouseOver)
 			.on("mousemove", mapMouseMove)
-			.on("mouseOut", mapMouseOut);
+			.on("mouseout", mapMouseOut);
 
 		// slider 
 		d3.select("#timeslide").on("input", function() {
 			update(+this.value);
 		});
 
-		d3.select("#timecheck").on("input", function() {
-            update(+this.value);
-        });
-
-		// updates inputValue based on slider
 		function update(value) {
-			if (isNaN(value)) {
-				if (d3.select("#timecheck").property("checked")) {
-					document.getElementById("range").style.opacity = "0.4";
-					document.getElementById("timeslide").style.opacity = "0.4";
-				} else {
-					document.getElementById("range").style.opacity = "1.0";
-                    document.getElementById("timeslide").style.opacity = "1.0";
-				}	
-			} else {
-				document.getElementById("range").innerHTML=dates[value];
-				inputValue = dates[value];
-			}
+			document.getElementById("range").innerHTML=dates[value];
+			inputValue = dates[value];
 			d3.selectAll(".Borough")
 				.attr("fill", initialDate);
 		}
 
-		// fetchs data based on date selections
 		function initialDate(d){
 			var name = d.properties.BoroName.toUpperCase();
-			var c = 0;
-			if (d3.select("#timecheck").property("checked")) {
-				for (var i = 0; i < dates.length; i++) {
-					c += months[dates[i]][name];
-				}	
-			} else {
-				c = months[inputValue][name];
-			}
+			var c = months[inputValue][name];
 			return colorScale(c);
 		}
 
@@ -278,10 +241,10 @@ Promise.all([
 			.attr('y', (d) => yScale(d.count))
 			.attr('height', (d) => 300 - yScale(d.count))
 			.attr('width', xScale.bandwidth())
-			//.attr("class", function(d){ return d.count } )
+			.attr("class", function(d){ return "Bar" } )
 			.on("mouseover", chartMouseOver)
 			.on("mousemove", chartMouseMove)
-			.on("mouseOut", chartMouseOut);
+			.on("mouseout", chartMouseOut);
 
 	}).catch(function(err){
 		console.log(err)

@@ -11,6 +11,8 @@
 - [ ] adjust bar chart to show type of residence of crime (@amir)
 - [ ] make color scale dynamic and add dynamic color legend (@kushal)
 
+#### How to run our code localhost???
+
 ### Current Branches in use
  - master: map and slider with dynamic updates
  - filterByCrime: Also has filtering checkboxes and static bar chart

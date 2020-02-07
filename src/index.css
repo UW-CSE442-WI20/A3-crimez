@@ -1,0 +1,32 @@
+.tooltip {
+    padding: 8px;
+    font-family: Arial;
+    background-color: black;
+    opacity: .7;
+    color: white;
+}
+
+.flex {
+    display: flex !important;
+}
+
+.checkboxes {
+    width: 35%;
+    justify-content: space-between;
+    padding: 1%;
+    border: 1px solid darkgray;
+}
+
+#sliderContainer {
+    /* text-align: center; */
+    /* position: relative; */
+    top: 100px;
+}
+
+rect {
+    fill: darkgrey;
+}
+
+#filtersAndBar {
+    flex-direction: column;
+}

@@ -18,11 +18,15 @@
 }
 
 #sliderContainer {
-    text-align: center;
-    position: relative;
+    /* text-align: center; */
+    /* position: relative; */
     top: 100px;
 }
 
 rect {
     fill: darkgrey;
+}
+
+#filtersAndBar {
+    flex-direction: column;
 }

@@ -1,3 +1,7 @@
-.bar-chart {
-    background-color: #cccccc;
+.flex {
+    display: flex !important;
+    width: 35%;
+    justify-content: space-between;
+    padding: 1%;
+    border: 1px solid darkgray;
 }

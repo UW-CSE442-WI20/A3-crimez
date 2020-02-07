@@ -6,6 +6,7 @@ var projection = d3.geoMercator()
 var path = d3.geoPath()
 	.projection(projection);
 
+var viewAll = false;
 var inputValue = "January";
 var dates = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 
@@ -20,6 +21,19 @@ var boroughName = function(d) {
 }
 var locationName = function(d) {
 	d.type.replace(/ /g, '');
+}
+
+var getText = function(d) {
+	var name = d.properties.BoroName;
+    if (d3.select("#timecheck").property("checked")) {
+    	var c = 0;
+        for (var i = 0; i < dates.length; i++) {
+        	c += months[dates[i]][name.toUpperCase()];
+        }
+        return (name + ": " + c + " crimes")
+    } else {
+        return (name + ": " +  months[inputValue][name.toUpperCase()] + " crimes")
+    }
 }
 
 var tooltip = d3.select("body")
@@ -45,7 +59,7 @@ let mapMouseOver = function(d) {
 		.transition()
 		.duration(200)
 	        .style("visibility", "visible")
-		.text(d.properties.BoroName + ": " +  months[inputValue][d.properties.BoroName.toUpperCase()] + " crimes");
+			.text(getText(d))
 }
 
 let mapMouseMove = function(d) {
@@ -61,7 +75,7 @@ let mapMouseMove = function(d) {
 		.style("stroke", "black")
 	tooltip.style("top", (d3.event.pageY - 10) + "px")
 		.style("left", (d3.event.pageX + 10) + "px")
-		.text(d.properties.BoroName + ": " +  months[inputValue][d.properties.BoroName.toUpperCase()] + " crimes");
+		.text(getText(d))
 }
 
 let mapMouseOut = function(d) {
@@ -180,16 +194,37 @@ Promise.all([
 			update(+this.value);
 		});
 
+		d3.select("#timecheck").on("input", function() {
+            update(+this.value);
+        });
 		function update(value) {
-			document.getElementById("range").innerHTML=dates[value];
-			inputValue = dates[value];
+			if (isNaN(value)) {
+				if (d3.select("#timecheck").property("checked")) {
+					document.getElementById("range").style.opacity = "0.4";
+					document.getElementById("timeslide").style.opacity = "0.4";
+				} else {
+					document.getElementById("range").style.opacity = "1.0";
+                    document.getElementById("timeslide").style.opacity = "1.0";
+				}	
+			} else {
+				document.getElementById("range").innerHTML=dates[value];
+				inputValue = dates[value];
+			}
 			d3.selectAll(".Borough")
 				.attr("fill", initialDate);
 		}
-
+		
+		// fetchs data based on date selections
 		function initialDate(d){
 			var name = d.properties.BoroName.toUpperCase();
-			var c = months[inputValue][name];
+			var c = 0;
+			if (d3.select("#timecheck").property("checked")) {
+				for (var i = 0; i < dates.length; i++) {
+					c += months[dates[i]][name];
+				}	
+			} else {
+				c = months[inputValue][name];
+			}
 			return colorScale(c);
 		}
 

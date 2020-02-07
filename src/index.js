@@ -258,8 +258,7 @@ Promise.all([
 			.on("mouseover", mapMouseOver)
 			.on("mousemove", mapMouseMove)
 			.on("mouseout", mapMouseOut);
-
-
+			
 		// slider 
 		d3.select("#timeslide").on("input", function () {
 			update(+this.value);
@@ -319,12 +318,12 @@ Promise.all([
 
 		// bar graph setup
 		const yScale = d3.scaleLinear()
-			.range([300, 0])
+			.range([200, 0])
 			// 60000 should be max of displayed counts
 			.domain([0, 110000]);
 
 		const xScale = d3.scaleBand()
-			.range([0, 800])
+			.range([0, 300])
 			.domain(sliced.map((d) => d.type))
 			.padding(0.2)
 
@@ -337,8 +336,15 @@ Promise.all([
 
 		// x axis
 		chart.append('g')
-			.attr('transform', `translate(0, 300)`)
-			.call(d3.axisBottom(xScale));
+			.attr('transform', `translate(0, 200)`)
+			.call(d3.axisBottom(xScale))
+			.selectAll("text")	
+			.style("text-anchor", "end")
+			.attr("dx", "-.8em")
+			.attr("dy", ".15em")
+			.attr("transform", function(d) {
+				return "rotate(-65)" 
+				});
 
 		// bars
 		chart.selectAll()
@@ -348,7 +354,7 @@ Promise.all([
 			.attr('x', (d) => xScale(d.type))
 			// add dynamic counting for this value
 			.attr('y', (d) => yScale(d.count))
-			.attr('height', (d) => 300 - yScale(d.count))
+			.attr('height', (d) => 200 - yScale(d.count))
 			.attr('width', xScale.bandwidth())
 			.attr("class", function(d){ return "Bar" } )
 			.on("mouseover", chartMouseOver)

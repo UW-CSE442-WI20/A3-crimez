@@ -152,7 +152,7 @@ Promise.all([
 		let crime_data = data[1]
 
 		crime_location = {}
-
+ 
 		// calculate month hash
 		for (var i = 0; i < crime_data.length; i++) {
 			var date = crime_data[i]["CMPLNT_FR_DT"]

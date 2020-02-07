@@ -8,7 +8,14 @@
 - bar graphs (maybe)   
 
 #### How to run our code localhost???
+
+PC:
+
 py -2 -m SimpleHTTPServer
+
+MAC:
+
+python -m SimpleHTTPServer
 
 -------------------------------------------------------------------
 # A3 Starter template

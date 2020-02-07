@@ -98,8 +98,8 @@ let mapMouseOut = function (d) {
 
 
 // graph mouse animations
-let chartMouseOver = function (d) {
-	d3.selectAll(".type:not(#" + locationName(d) + ")")
+let chartMouseOver = function(d) {
+	d3.selectAll(".Bar:not(#" + locationName(d)+ ")")
 		.transition()
 		.duration(200)
 		.style("opacity", .2)
@@ -112,12 +112,12 @@ let chartMouseOver = function (d) {
 		.style("left", (d3.event.pageX + 10) + "px")
 		.transition()
 		.duration(200)
-		.style("visibility", "visible")
-		.text(d.type + ": " + d.count + " crimes");
+	        .style("visibility", "visible")
+		.text(d.count + " crimes");
 }
 
-let chartMouseMove = function (d) {
-	d3.selectAll(".type:not(#" + locationName(d) + ")")
+let chartMouseMove = function(d) {
+	d3.selectAll(".Bar:not(#" + locationName(d) + ")")
 		.transition()
 		.duration(200)
 		.style("opacity", 0.2)
@@ -129,11 +129,11 @@ let chartMouseMove = function (d) {
 		.style("stroke", "black")
 	tooltip.style("top", (d3.event.pageY - 10) + "px")
 		.style("left", (d3.event.pageX + 10) + "px")
-		.text(d.type + ": " + d.count + " crimes");
+		.text(d.count + " crimes");
 }
 
-let chartMouseOut = function (d) {
-	d3.selectAll(".type")
+let chartMouseOut = function(d) {
+	d3.selectAll(".Bar")
 		.transition()
 		.duration(100)
 		.style("opacity", 1)
@@ -257,7 +257,7 @@ Promise.all([
 			.attr("class", function (d) { return "Borough" })
 			.on("mouseover", mapMouseOver)
 			.on("mousemove", mapMouseMove)
-			.on("mouseOut", mapMouseOut);
+			.on("mouseout", mapMouseOut);
 
 
 		// slider 
@@ -287,7 +287,7 @@ Promise.all([
 			d3.selectAll(".Borough")
 				.attr("fill", initialDate);
 		}
-
+		
 		// fetchs data based on date selections
 		function initialDate(d) {
 			var name = d.properties.BoroName.toUpperCase();
@@ -350,10 +350,10 @@ Promise.all([
 			.attr('y', (d) => yScale(d.count))
 			.attr('height', (d) => 300 - yScale(d.count))
 			.attr('width', xScale.bandwidth())
-			//.attr("class", function(d){ return d.count } )
+			.attr("class", function(d){ return "Bar" } )
 			.on("mouseover", chartMouseOver)
 			.on("mousemove", chartMouseMove)
-			.on("mouseOut", chartMouseOut);
+			.on("mouseout", chartMouseOut);
 
 	}).catch(function (err) {
 		console.log(err)

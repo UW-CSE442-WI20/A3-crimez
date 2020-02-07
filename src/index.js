@@ -14,6 +14,7 @@ var projection = d3.geoMercator()
 var path = d3.geoPath()
 	.projection(projection);
 
+var crimeTypes = [];
 var viewAll = false;
 var inputValue = "January";
 var dates = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
@@ -33,15 +34,27 @@ var locationName = function (d) {
 
 var getText = function (d) {
 	var name = d.properties.BoroName;
+	var c = 0;
 	if (d3.select("#timecheck").property("checked")) {
-		var c = 0;
-		for (var i = 0; i < dates.length; i++) {
-			c += months[dates[i]][name.toUpperCase()];
+		if (d3.select("#all").property("checked")) {
+			c = months["AllMonths"][name.toUpperCase()]["AllCrimes"];
+		} else {
+			for (var i = 0; i < crimeTypes.length; i++) {
+				curr = crimeTypes[i];
+				c += months["AllMonths"][name.toUpperCase()][curr];
+			}
 		}
-		return (name + ": " + c + " crimes")
 	} else {
-		return (name + ": " + months[inputValue][name.toUpperCase()] + " crimes")
+		if (d3.select("#all").property("checked")) {
+			c = months[inputValue][name.toUpperCase()]["AllCrimes"];
+		} else {
+			for (var i = 0; i < crimeTypes.length; i++) {
+				curr = crimeTypes[i];
+				c += months[inputValue][name.toUpperCase()][curr];
+			}
+		}
 	}
+	return (name + ": " + c + " crimes")
 }
 
 var tooltip = d3.select("body")
@@ -98,8 +111,8 @@ let mapMouseOut = function (d) {
 
 
 // graph mouse animations
-let chartMouseOver = function(d) {
-	d3.selectAll(".Bar:not(#" + locationName(d)+ ")")
+let chartMouseOver = function (d) {
+	d3.selectAll(".Bar:not(#" + locationName(d) + ")")
 		.transition()
 		.duration(200)
 		.style("opacity", .2)
@@ -112,11 +125,11 @@ let chartMouseOver = function(d) {
 		.style("left", (d3.event.pageX + 10) + "px")
 		.transition()
 		.duration(200)
-	        .style("visibility", "visible")
+		.style("visibility", "visible")
 		.text(d.count + " crimes");
 }
 
-let chartMouseMove = function(d) {
+let chartMouseMove = function (d) {
 	d3.selectAll(".Bar:not(#" + locationName(d) + ")")
 		.transition()
 		.duration(200)
@@ -132,7 +145,7 @@ let chartMouseMove = function(d) {
 		.text(d.count + " crimes");
 }
 
-let chartMouseOut = function(d) {
+let chartMouseOut = function (d) {
 	d3.selectAll(".Bar")
 		.transition()
 		.duration(100)
@@ -152,32 +165,95 @@ Promise.all([
 		let crime_data = data[1]
 
 		crime_location = {}
-  
+
 		// calculate month hash
 		for (var i = 0; i < crime_data.length; i++) {
 			var date = crime_data[i]["CMPLNT_FR_DT"]
-			var parts = date.split("/")
+
+			parts = [];
+
+			if (date.includes("&")) {
+				parts = date.split(" & ")
+			} else {
+				parts = date.split("/")
+			}
+
 			var month = dates[parts[0] - 1]
+
 			var name = [crime_data[i]["BORO_NM"]]
 			var crime = crime_data[i]['offense_id'];
+
+			// all months all crimes
+			if (months["AllMonths"]) {
+				if (months["AllMonths"][name]) {
+					if (months["AllMonths"][name]["AllCrimes"]) {
+						months["AllMonths"][name]["AllCrimes"] += 1
+					} else {
+						months["AllMonths"][name]["AllCrimes"] = 1
+					}
+				} else {
+					months["AllMonths"][name] = {}
+					months["AllMonths"][name]["AllCrimes"] = 1
+				}
+			} else {
+				months["AllMonths"] = {}
+				months["AllMonths"][name] = {}
+				months["AllMonths"][name]["AllCrimes"] = 1
+			}
+
+			// all months, specific crimes 
+			if (months["AllMonths"][name]) {
+				if (months["AllMonths"][name][crime]) {
+					months["AllMonths"][name][crime] += 1
+				} else {
+					months["AllMonths"][name][crime] = 1
+				}
+			} else {
+				months["AllMonths"][name] = {}
+				months["AllMonths"][name][crime] = 1
+			}
+
+			//specific month, all crimes 
 			if (months[month]) {
 				if (months[month][name]) {
-					months[month][name] += 1
+					if (months[month][name]["AllCrimes"]) {
+						months[month][name]["AllCrimes"] += 1
+					} else {
+						months[month][name]["AllCrimes"] = 1
+					}
+
 				} else {
-					months[month][name] = 1
+					months[month][name] = {}
+					months[month][name]["AllCrimes"] = 1
 				}
 			} else {
 				months[month] = {}
-				months[month][name] = 1
+				months[month][name] = {}
+				months[month][name]["AllCrimes"] = 1
 			}
+
+			// specific month, specific crimes
+			if (months[month][name]) {
+				if (months[month][name][crime]) {
+					months[month][name][crime] += 1
+				} else {
+					months[month][name][crime] = 1
+				}
+
+			} else {
+				months[month][name] = {}
+				months[month][name][crime] = 1
+			}
+
+
 
 			if (crime_location[crime_data[i]["PREM_TYP_DESC"]]) {
 				crime_location[crime_data[i]["PREM_TYP_DESC"]] += 1
 			} else {
 				crime_location[crime_data[i]["PREM_TYP_DESC"]] = 1
 			}
-
 		}
+
 		console.log(months)
 
 
@@ -208,7 +284,7 @@ Promise.all([
 			}
 
 			// crimtTypes holds all the crimes that are selected 
-			crimeTypes = [];
+
 			checkboxes = document.getElementsByTagName("input");
 
 			// this forloop populated crimeTypes with the crimes that are selected 
@@ -218,23 +294,23 @@ Promise.all([
 				}
 			}
 
-			for (var i = 0; i < crime_data.length; i++) {
-				if (crimeTypes.includes(crime_data[i]['offense_id'])) {
-					let boroughKey = newCounts[crime_data[i]["BORO_NM"]];
+			// for (var i = 0; i < crime_data.length; i++) {
+			// 	if (crimeTypes.includes(crime_data[i]['offense_id'])) {
+			// 		let boroughKey = newCounts[crime_data[i]["BORO_NM"]];
 
-					if (boroughKey) {
-						newCounts[crime_data[i]["BORO_NM"]] += 1;
-					} else {
-						newCounts[crime_data[i]["BORO_NM"]] = 1;
-					}
-				}
-			}
+			// 		if (boroughKey) {
+			// 			newCounts[crime_data[i]["BORO_NM"]] += 1;
+			// 		} else {
+			// 			newCounts[crime_data[i]["BORO_NM"]] = 1;
+			// 		}
+			// 	}
+			// }
 
-			console.log("func", newCounts);
+			// console.log("func", newCounts);
 
-			d3.selectAll(".Borough").attr("fill", function (d) {
-				return colorScale(newCounts[d.properties["BoroName"].toUpperCase()]);
-			});
+			// d3.selectAll(".Borough").attr("fill", function (d) {
+			// 	return colorScale(newCounts[d.properties["BoroName"].toUpperCase()]);
+			// });
 		}
 
 		// checkboxes
@@ -287,17 +363,29 @@ Promise.all([
 			d3.selectAll(".Borough")
 				.attr("fill", initialDate);
 		}
-		
+
 		// fetchs data based on date selections
 		function initialDate(d) {
 			var name = d.properties.BoroName.toUpperCase();
 			var c = 0;
 			if (d3.select("#timecheck").property("checked")) {
-				for (var i = 0; i < dates.length; i++) {
-					c += months[dates[i]][name];
+				if (d3.select("#all").property("checked")) {
+					c = months["AllMonths"][name]["AllCrimes"];
+				} else {
+					for (var i = 0; i < crimeTypes.length; i++) {
+						curr = crimeTypes[i];
+						c += months["AllMonths"][name][curr];
+					}
 				}
 			} else {
-				c = months[inputValue][name];
+				if (d3.select("#all").property("checked")) {
+					c = months[inputValue][name]["AllCrimes"];
+				} else {
+					for (var i = 0; i < crimeTypes.length; i++) {
+						curr = crimeTypes[i];
+						c += months[inputValue][name][curr];
+					}
+				}
 			}
 			return colorScale(c);
 		}
@@ -350,7 +438,7 @@ Promise.all([
 			.attr('y', (d) => yScale(d.count))
 			.attr('height', (d) => 300 - yScale(d.count))
 			.attr('width', xScale.bandwidth())
-			.attr("class", function(d){ return "Bar" } )
+			.attr("class", function (d) { return "Bar" })
 			.on("mouseover", chartMouseOver)
 			.on("mousemove", chartMouseMove)
 			.on("mouseout", chartMouseOut);

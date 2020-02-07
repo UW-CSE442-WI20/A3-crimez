@@ -18,6 +18,9 @@ var colorScale = d3.scaleThreshold()
 var boroughName = function(d) {
 	d.properties.BoroName.replace(/ /g, '');
 }
+var locationName = function(d) {
+	d.type.replace(/ /g, '');
+}
 
 var tooltip = d3.select("body")
 	.append("div")
@@ -27,7 +30,7 @@ var tooltip = d3.select("body")
 	.style("visibility", "hidden");
 
 // mouse animations
-let mouseOver = function(d) {
+let mapMouseOver = function(d) {
 	d3.selectAll(".Borough:not(#" + boroughName(d)+ ")")
 		.transition()
 		.duration(200)
@@ -45,7 +48,7 @@ let mouseOver = function(d) {
 		.text(d.properties.BoroName + ": " +  months[inputValue][d.properties.BoroName.toUpperCase()] + " crimes");
 }
 
-let mouseMove = function(d) {
+let mapMouseMove = function(d) {
 	d3.selectAll(".Borough:not(#" + boroughName(d) + ")")
 		.transition()
 		.duration(200)
@@ -61,8 +64,54 @@ let mouseMove = function(d) {
 		.text(d.properties.BoroName + ": " +  months[inputValue][d.properties.BoroName.toUpperCase()] + " crimes");
 }
 
-let mouseOut = function(d) {
+let mapMouseOut = function(d) {
 	d3.selectAll(".Borough")
+		.transition()
+		.duration(100)
+		.style("opacity", 1)
+		.style("stroke", "transparent")
+	tooltip.style("visibility", "hidden")
+}
+
+
+
+// graph mouse animations
+let chartMouseOver = function(d) {
+	d3.selectAll(".type:not(#" + locationName(d)+ ")")
+		.transition()
+		.duration(200)
+		.style("opacity", .2)
+	d3.select(this)
+		.transition()
+		.duration(200)
+		.style("opacity", 1)
+		.style("stroke", "black")
+	tooltip.style("top", (d3.event.pageY - 10) + "px")
+		.style("left", (d3.event.pageX + 10) + "px")
+		.transition()
+		.duration(200)
+	        .style("visibility", "visible")
+		.text(d.type + ": " +  d.count + " crimes");
+}
+
+let chartMouseMove = function(d) {
+	d3.selectAll(".type:not(#" + locationName(d) + ")")
+		.transition()
+		.duration(200)
+		.style("opacity", 0.2)
+		.style("stroke", "transparent")
+	d3.select(this)
+		.transition()
+		.duration(200)
+		.style("opacity", 1)
+		.style("stroke", "black")
+	tooltip.style("top", (d3.event.pageY - 10) + "px")
+		.style("left", (d3.event.pageX + 10) + "px")
+		.text(d.type + ": " +  d.count + " crimes");
+}
+
+let chartMouseOut = function(d) {
+	d3.selectAll(".type")
 		.transition()
 		.duration(100)
 		.style("opacity", 1)
@@ -122,9 +171,9 @@ Promise.all([
 				return initialDate(d);
 			})
 			.attr("class", function(d){ return "Borough" } )
-			.on("mouseover", mouseOver)
-			.on("mousemove", mouseMove)
-			.on("mouseout", mouseOut);
+			.on("mouseover", mapMouseOver)
+			.on("mousemove", mapMouseMove)
+			.on("mouseOut", mapMouseOut);
 
 		// slider 
 		d3.select("#timeslide").on("input", function() {
@@ -192,7 +241,10 @@ Promise.all([
 			.attr('y', (d) => yScale(d.count))
 			.attr('height', (d) => 300 - yScale(d.count))
 			.attr('width', xScale.bandwidth())
-			
+			//.attr("class", function(d){ return d.count } )
+			.on("mouseover", chartMouseOver)
+			.on("mousemove", chartMouseMove)
+			.on("mouseOut", chartMouseOut);
 
 	}).catch(function(err){
 		console.log(err)

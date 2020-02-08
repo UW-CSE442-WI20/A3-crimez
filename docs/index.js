@@ -14,6 +14,7 @@ var projection = d3.geoMercator()
 var path = d3.geoPath()
 	.projection(projection);
 
+var sliced = {}; 
 var crimeTypes = [];
 var inputValue = "January";
 var dates = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
@@ -342,7 +343,7 @@ Promise.all([
 			}
 			crimeTypes = JSON.parse(JSON.stringify(crimeTypesTemp));
 			d3.selectAll(".Borough")
-                .attr("fill", initialDate);
+                .attr("fill", getMapCount);
 
 			// for (var i = 0; i < crime_data.length; i++) {
 			// 	if (crimeTypes.includes(crime_data[i]['offense_id'])) {
@@ -378,7 +379,7 @@ Promise.all([
 
 		// set the color of each country
 			.attr("fill", function (d) {
-				return initialDate(d);
+				return getMapCount(d);
 			})
 			.attr("class", function (d) { return "Borough" })
 			.on("mouseover", mapMouseOver)
@@ -420,11 +421,11 @@ Promise.all([
 			}
 
 			d3.selectAll(".Borough")
-				.attr("fill", initialDate);
+				.attr("fill", getMapCount);
 		}
 
 		// fetchs data based on date selections
-		function initialDate(d) {
+		function getMapCount(d) {
 			var name = d.properties.BoroName.toUpperCase();
 			var c = 0;
 			if (d3.select("#timecheck").property("checked")) {
@@ -453,20 +454,67 @@ Promise.all([
 			return colorScale(c);
 		}
 
-		// convert crimes_types hash to array of hashes
-		// probably a better way to do all this
-		var crimes = new Array(Object.keys(crime_location).length);
-		i = 0
-		Object.keys(crime_location).forEach(function (key) {
-			var value = crime_location[key]
-			crimes[i] = { "type": key, "count": value }
-			i++
-		})
-		// sort the locations based on count, in ascending order
-		crimes.sort((a, b) => (a.count > b.count) ? -1 : ((b.count > a.count) ? 1 : 0));
+		function updateBarStats() {
+			var premiseStats = {} 
+			var currMonth = ""	
+			if (d3.select("#timecheck").property("checked")) {
+				currMonth = "AllMonths";
+			} else {
+				currMonth = inputValue;
+			}
 
-		//get the top 5 locations
-		sliced = crimes.slice(0, 5);
+			// handles all crimes
+			if (d3.select("#all").property("checked")) {
+				for (var prem of barDict[currMonth]["AllCrimes"]) {
+					if (barDict[currMonth]["AllCrimes"][prem]) {
+						if (premiseStats[prem]) {
+							premiseStats[prem] += 1;
+						} else {
+							premiseStats[prem] = 1;
+						}	
+					} else {
+						if (premiseStats[prem]) {
+                            premiseStats[prem] += 0;
+                        } else {
+                            premiseStats[prem] = 0;
+                        }
+					}
+				} 
+			} else {
+				for (var i = 0; i = crimeTypes.length; i++) {
+					currCrime = crimeTypes[i];
+					for (var prem of barDict[currMonth][currCrime]) {
+    	                if (barDict[currMonth][currCrime][prem]) {
+        	                if (premiseStats[prem]) { 
+            	                premiseStats[prem] += 1;
+                	        } else {
+                    	        premiseStats[prem] = 1;
+                        	}   
+                    	} else {
+                    	    if (premiseStats[prem]) { 
+                        	    premiseStats[prem] += 0;
+                        	} else {
+                            	premiseStats[prem] = 0;
+                        	}
+                    	}
+					}
+                }  
+
+			}
+			// Create items array
+			var crimes = new Array(Object.keys(premiseStats).length);
+        	i = 0
+        	Object.keys(premiseStats).forEach(function (key) {
+        		var value = premiseStates[key]
+        		crimes[i] = { "type": key, "count": value }
+        		i++
+        	})
+        	// sort the locations based on count, in ascending order
+        	crimes.sort((a, b) => (a.count > b.count) ? -1 : ((b.count > a.count) ? 1 : 0));
+
+			sliced = items.slice(0,5);
+			console.log(sliced.map);
+		}	
 
 		// bar graph setup
 		const yScale = d3.scaleLinear()

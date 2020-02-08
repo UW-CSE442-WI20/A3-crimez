@@ -27,6 +27,10 @@ rect {
     fill: darkgrey;
 }
 
+h1 {
+    padding-left: 125px;
+}
+
 #filtersAndBar {
     flex-direction: column;
     /* border: 1px solid darkgray; */

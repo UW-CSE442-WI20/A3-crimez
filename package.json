@@ -4,8 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "cd src/; python -m SimpleHTTPServer",
-    "build": "parcel build src/index.html; rm -rf docs; mv dist docs;",
+    "start": "cd docs/; python -m SimpleHTTPServer",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

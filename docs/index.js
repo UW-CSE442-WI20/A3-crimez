@@ -368,9 +368,11 @@ Promise.all([
 				if (d3.select("#timecheck").property("checked")) {
 					document.getElementById("range").style.opacity = "0.4";
 					document.getElementById("timeslide").style.opacity = "0.4";
+					document.getElementById("timeslide").disabled = true;
 				} else {
 					document.getElementById("range").style.opacity = "1.0";
 					document.getElementById("timeslide").style.opacity = "1.0";
+					document.getElementById("timeslide").disabled = false;
 				}
 			} else {
 				document.getElementById("range").innerHTML = "Month: " + dates[value];

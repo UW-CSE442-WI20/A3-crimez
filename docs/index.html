@@ -25,13 +25,13 @@
 		<div id="filtersAndBar" class = "flex">
 			<div id="sliderContainer">
 				<h3>Filter By Time</h3>
-				<span id="range">Month: January</span>
+				<span id="range" style="opacity:0.4">Month: January</span>
 				&emsp;&emsp;&emsp;
 				<input id="timecheck" type="checkbox" checked> View All Months
 				<br>
-				<input id="timeslide" style="opacity:0.4" type="range" min="0" max="11" value="0" step="1" />
+				<input id="timeslide" style="opacity:0.4" type="range" min="0" max="11" value="0" step="1" disabled/>
 				<br>
-				<span id="range" style="opacity:0.4">January</span>
+				<br>
 			</div>
 			<form class="flex checkboxes">
 				<div id="filters" class = "flex">
@@ -82,6 +82,7 @@
 						<input type="checkbox" id="21" name="theftfraud" checked> Theft-fraud
 						<br>
 						<input type="checkbox" id="16" name="vehicleandtrafficlaws" checked> Vehicle and traffic laws
+						<br>
 						<br>
 					</div>
 				</div>

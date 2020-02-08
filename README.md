@@ -1,3 +1,9 @@
+## TODO
+- apply filters to bar graph
+- styling
+- color scale configuration
+- **IF TIME** apply map as filter for bar graph
+
 ## Question: What does the distribution of crime look like in NYC in 2014-2015 (time and place)?
 ### Visualizations
 - map showing amount of crime per area

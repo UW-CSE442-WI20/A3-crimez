@@ -49,6 +49,11 @@ h1 {
     text-align: center;
 }
 
+#barGraph {
+    
+    width: 100%;
+    border:1px solid darkgray;
+}
 input[type="range"] {
     justify-content: left;
     width:300px;

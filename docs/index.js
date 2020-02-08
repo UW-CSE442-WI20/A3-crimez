@@ -24,6 +24,11 @@ var colorScale = d3.scaleThreshold()
 	.domain([1, 5000, 8000, 10000, 20000])
 	.range(d3.schemePurples[5]);
 
+var legendColor = d3.legendColor()
+    .labelFormat(d3.format(".0f"))
+    .labels(d3.legendHelpers.thresholdLabels)
+    .scale(colorScale);
+
 var boroughName = function (d) {
 	d.properties.BoroName.replace(/ /g, '');
 }
@@ -325,11 +330,11 @@ Promise.all([
 			.data(geo_data.features)
 			.enter()
 			.append("path")
-			// draw each country
+		// draw each country
 			.attr("d", d3.geoPath().projection(projection))
 			.attr("id", (d) => boroughName(d))
 
-			// set the color of each country
+		// set the color of each country
 			.attr("fill", function (d) {
 				return initialDate(d);
 			})
@@ -338,6 +343,15 @@ Promise.all([
 			.on("mousemove", mapMouseMove)
 			.on("mouseout", mapMouseOut);
 
+		// Draw the legend
+		legend = d3.select("#map").append("g")
+			.attr("transform", "translate(500,10)")
+			.call(legendColor);
+
+		var legend = d3.legendColor()
+			.scale(colorScale)
+			.labelFormat(d3.format(".0f"))
+			.title("Legend");
 
 		// slider 
 		d3.select("#timeslide").on("input", function () {
@@ -359,7 +373,7 @@ Promise.all([
 					document.getElementById("timeslide").style.opacity = "1.0";
 				}
 			} else {
-				document.getElementById("range").innerHTML = dates[value];
+				document.getElementById("range").innerHTML = "Month: " + dates[value];
 				inputValue = dates[value];
 			}
 
@@ -414,12 +428,11 @@ Promise.all([
 
 		// bar graph setup
 		const yScale = d3.scaleLinear()
-			.range([300, 0])
-			// 60000 should be max of displayed counts
+			.range([200, 0])
 			.domain([0, 110000]);
 
 		const xScale = d3.scaleBand()
-			.range([0, 800])
+			.range([0, 300])
 			.domain(sliced.map((d) => d.type))
 			.padding(0.2)
 
@@ -432,8 +445,15 @@ Promise.all([
 
 		// x axis
 		chart.append('g')
-			.attr('transform', `translate(0, 300)`)
-			.call(d3.axisBottom(xScale));
+			.attr('transform', `translate(0, 200)`)
+			.call(d3.axisBottom(xScale))
+			.selectAll("text")	
+			.style("text-anchor", "end")
+			.attr("dx", "-.8em")
+			.attr("dy", ".15em")
+			.attr("transform", function(d) {
+				return "rotate(-65)" 
+				});
 
 		// bars
 		chart.selectAll()
@@ -441,9 +461,8 @@ Promise.all([
 			.enter()
 			.append('rect')
 			.attr('x', (d) => xScale(d.type))
-			// add dynamic counting for this value
 			.attr('y', (d) => yScale(d.count))
-			.attr('height', (d) => 300 - yScale(d.count))
+			.attr('height', (d) => 200 - yScale(d.count))
 			.attr('width', xScale.bandwidth())
 			.attr("class", function (d) { return "Bar" })
 			.on("mouseover", chartMouseOver)

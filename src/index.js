@@ -294,7 +294,7 @@ Promise.all([
 					document.getElementById("timeslide").style.opacity = "1.0";
 				}
 			} else {
-				document.getElementById("range").innerHTML = dates[value];
+				document.getElementById("range").innerHTML = "Month: " + dates[value];
 				inputValue = dates[value];
 			}
 

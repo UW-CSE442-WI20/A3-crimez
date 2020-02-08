@@ -42,23 +42,23 @@ var getText = function (d) {
 	console.log(crimeTypes);
 	if (d3.select("#timecheck").property("checked")) {
 		if (d3.select("#all").property("checked")) {
-			c = months["AllMonths"][name.toUpperCase()]["AllCrimes"];
+			c = mapDict["AllMonths"][name.toUpperCase()]["AllCrimes"];
 		} else {
 			for (var i = 0; i < crimeTypes.length; i++) {
 				curr = crimeTypes[i];
-				if (months["AllMonths"][name.toUpperCase()][curr]) {
-                	c += months["AllMonths"][name.toUpperCase()][curr];
+				if (mapDict["AllMonths"][name.toUpperCase()][curr]) {
+                	c += mapDict["AllMonths"][name.toUpperCase()][curr];
                 }
 			}
 		}
 	} else {
 		if (d3.select("#all").property("checked")) {
-			c = months[inputValue][name.toUpperCase()]["AllCrimes"];
+			c = mapDict[inputValue][name.toUpperCase()]["AllCrimes"];
 		} else {
 			for (var i = 0; i < crimeTypes.length; i++) {
 				curr = crimeTypes[i];
-				if (months[inputValue][name.toUpperCase()][curr]) {
-                    c += months[inputValue][name.toUpperCase()][curr];
+				if (mapDict[inputValue][name.toUpperCase()][curr]) {
+                    c += mapDict[inputValue][name.toUpperCase()][curr];
                 }
 			}
 		}
@@ -169,11 +169,10 @@ Promise.all([
 	d3.csv("./data/nyc_crimez_filtered.csv"),
 ]).then(
 	(data, reg) => {
-		months = {}
+		mapDict = {}
+		barDict = {}
 		let geo_data = data[0]
 		let crime_data = data[1]
-
-		crime_location = {}
 
 		// calculate month hash
 		for (var i = 0; i < crime_data.length; i++) {
@@ -188,78 +187,121 @@ Promise.all([
 			var month = dates[parts[0] - 1]
 			var name = [crime_data[i]["BORO_NM"]]
 			var crime = crime_data[i]['offense_id'];
+			var premise = crime_data[i]["PREM_TYP_DESC"];
 			// all months all crimes
-			if (months["AllMonths"]) {
-				if (months["AllMonths"][name]) {
-					if (months["AllMonths"][name]["AllCrimes"]) {
-						months["AllMonths"][name]["AllCrimes"] += 1
+			if (mapDict["AllMonths"] && barDict["AllMonths"]) {
+				if (barDict["AllMonths"]["AllCrimes"]) {
+                    if (barDict["AllMonths"]["AllCrimes"][premise]) { 
+                        barDict["AllMonths"]["AllCrimes"][premise] += 1
+                    } else {
+                        barDict["AllMonths"]["AllCrimes"][premise] = 1
+                    }
+                } else {
+                    barDict["AllMonths"]["AllCrimes"] = {}
+                    barDict["AllMonths"]["AllCrimes"][premise] = 1
+				}
+				if (mapDict["AllMonths"][name]) {
+					if (mapDict["AllMonths"][name]["AllCrimes"]) {
+						mapDict["AllMonths"][name]["AllCrimes"] += 1
 					} else {
-						months["AllMonths"][name]["AllCrimes"] = 1
+						mapDict["AllMonths"][name]["AllCrimes"] = 1
 					}
 				} else {
-					months["AllMonths"][name] = {}
-					months["AllMonths"][name]["AllCrimes"] = 1
+					mapDict["AllMonths"][name] = {}
+					mapDict["AllMonths"][name]["AllCrimes"] = 1
 				}
 			} else {
-				months["AllMonths"] = {}
-				months["AllMonths"][name] = {}
-				months["AllMonths"][name]["AllCrimes"] = 1
+				mapDict["AllMonths"] = {}
+				mapDict["AllMonths"][name] = {}
+				mapDict["AllMonths"][name]["AllCrimes"] = 1
+				
+				barDict["AllMonths"] = {}
+				barDict["AllMonths"]["AllCrimes"] = {}
+                barDict["AllMonths"]["AllCrimes"][premise] = 1
 			}
 
-			// all months, specific crimes 
-			if (months["AllMonths"][name]) {
-				if (months["AllMonths"][name][crime]) {
-					months["AllMonths"][name][crime] += 1
+			// all months specific crimes 
+			if (mapDict["AllMonths"][name]) {
+				if (mapDict["AllMonths"][name][crime]) {
+					mapDict["AllMonths"][name][crime] += 1
 				} else {
-					months["AllMonths"][name][crime] = 1
+					mapDict["AllMonths"][name][crime] = 1
 				}
 			} else {
-				months["AllMonths"][name] = {}
-				months["AllMonths"][name][crime] = 1
+				mapDict["AllMonths"][name] = {}
+				mapDict["AllMonths"][name][crime] = 1
 			}
+			if (barDict["AllMonths"][crime]) {
+                if (barDict["AllMonths"][crime][premise]) {
+                    barDict["AllMonths"][crime][premise] += 1
+                } else {
+                    barDict["AllMonths"][crime][premise] = 1
+                }
+            } else {
+                barDict["AllMonths"][crime] = {}
+                barDict["AllMonths"][crime][premise] = 1
+            }
 
 			//specific month, all crimes 
-			if (months[month]) {
-				if (months[month][name]) {
-					if (months[month][name]["AllCrimes"]) {
-						months[month][name]["AllCrimes"] += 1
+			if (mapDict[month] && barDict[month]) {
+				if (barDict[month][premise]) {
+                    if (barDict[month]["AllCrimes"][premise]) { 
+                        barDict[month]["AllCrimes"][premise] += 1
+                    } else {
+                        barDict[month]["AllCrimes"][premise] = 1
+                    }
+                
+                } else {
+                    barDict[month]["AllCrimes"] = {}
+                    barDict[month]["AllCrimes"][premise] = 1
+                }
+				if (mapDict[month][name]) {
+					if (mapDict[month][name]["AllCrimes"]) {
+						mapDict[month][name]["AllCrimes"] += 1
 					} else {
-						months[month][name]["AllCrimes"] = 1
+						mapDict[month][name]["AllCrimes"] = 1
 					}
 
 				} else {
-					months[month][name] = {}
-					months[month][name]["AllCrimes"] = 1
+					mapDict[month][name] = {}
+					mapDict[month][name]["AllCrimes"] = 1
 				}
 			} else {
-				months[month] = {}
-				months[month][name] = {}
-				months[month][name]["AllCrimes"] = 1
+				mapDict[month] = {}
+				mapDict[month][name] = {}
+				mapDict[month][name]["AllCrimes"] = 1
+
+				barDict[month] = {}
+                barDict[month]["AllCrimes"] = {}
+                barDict[month]["AllCrimes"][premise] = 1
 			}
 
 			// specific month, specific crimes
-			if (months[month][name]) {
-				if (months[month][name][crime]) {
-					months[month][name][crime] += 1
+			if (mapDict[month][name]) {
+				if (mapDict[month][name][crime]) {
+					mapDict[month][name][crime] += 1
 				} else {
-					months[month][name][crime] = 1
+					mapDict[month][name][crime] = 1
 				}
 
 			} else {
-				months[month][name] = {}
-				months[month][name][crime] = 1
+				mapDict[month][name] = {}
+				mapDict[month][name][crime] = 1
 			}
+			if (barDict[month][crime]) {
+                if (barDict[month][crime][premise]) {
+                    barDict[month][crime][premise] += 1
+                } else {
+                    barDict[month][crime][premise] = 1
+                }
 
-
-
-			if (crime_location[crime_data[i]["PREM_TYP_DESC"]]) {
-				crime_location[crime_data[i]["PREM_TYP_DESC"]] += 1
-			} else {
-				crime_location[crime_data[i]["PREM_TYP_DESC"]] = 1
-			}
+            } else {
+                barDict[month][crime] = {}
+                barDict[month][crime][premise] = 1
+            }
 		}
 
-		console.log(months)
+		console.log(barDict)
 
 
 
@@ -387,23 +429,23 @@ Promise.all([
 			var c = 0;
 			if (d3.select("#timecheck").property("checked")) {
 				if (d3.select("#all").property("checked")) {
-					c = months["AllMonths"][name]["AllCrimes"];
+					c = mapDict["AllMonths"][name]["AllCrimes"];
 				} else {
 					for (var i = 0; i < crimeTypes.length; i++) {
 						curr = crimeTypes[i];
-						if (months["AllMonths"][name][curr]) {
-							c += months["AllMonths"][name][curr];
+						if (mapDict["AllMonths"][name][curr]) {
+							c += mapDict["AllMonths"][name][curr];
 						}
 					}
 				}
 			} else {
 				if (d3.select("#all").property("checked")) {
-					c = months[inputValue][name]["AllCrimes"];
+					c = mapDict[inputValue][name]["AllCrimes"];
 				} else {
 					for (var i = 0; i < crimeTypes.length; i++) {
 						curr = crimeTypes[i];
-						if (months[inputValue][name][curr]) {
-							c += months[inputValue][name][curr];
+						if (mapDict[inputValue][name][curr]) {
+							c += mapDict[inputValue][name][curr];
 						}
 					}
 				}

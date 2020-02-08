@@ -6,22 +6,16 @@
   - based on type of place
 - bar graph  
 
-### TODOs
-- [ ] Connect checkboxes to filtering data (@heather/@emma)
-- [ ] adjust bar chart to show type of residence of crime (@amir)
-- [ ] make color scale dynamic and add dynamic color legend (@kushal)
-
-#### How to run our code localhost???
-
 ### Current Branches in use
- - master: map and slider with dynamic updates
- - filterByCrime: Also has filtering checkboxes and static bar chart
+ - master: all the basics :)
+ - fix_scale: work for making the coloring dynamic 
  
 ### How to run our code locally
 
-For Windows: py -2 -m SimpleHTTPServer
+Run `npm start` in the root direction or `python -m SimpleHTTPServer`
 
-For Mac: python -m SimpleHTTPServer
+(For Lior: py -2 -m SimpleHTTPServer)
+
 
 ### Our site
 

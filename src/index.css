@@ -11,22 +11,44 @@
 }
 
 .checkboxes {
-    width: 35%;
+    width: 100%;
     justify-content: space-between;
-    padding: 1%;
     border: 1px solid darkgray;
 }
 
 #sliderContainer {
-    /* text-align: center; */
-    /* position: relative; */
-    top: 100px;
+    text-align: center;
+    position: relative;
+    width: 100%;
+    border:1px solid darkgray;
 }
 
 rect {
     fill: darkgrey;
 }
 
+h1 {
+    padding-left: 125px;
+}
+
 #filtersAndBar {
     flex-direction: column;
+    /* border: 1px solid darkgray; */
 }
+
+#filters{
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+}
+
+.active {
+    order: -1;
+    flex: 1 0 100%;
+    text-align: center;
+}
+
+input[type="range"] {
+    justify-content: left;
+    width:300px;
+  }

@@ -1,5 +1,5 @@
 ## TODO
-- apply filters to bar graph
+- apply filters to bar graph (check back when full data is in - criminal trespass)
 - styling
 - color scale configuration
 - **IF TIME** apply map as filter for bar graph

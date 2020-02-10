@@ -521,14 +521,30 @@ Promise.all([
 		}
 
 		function updateBarChart() {
-			console.log("?", sliced)
-			const chart = d3.selectAll(".Bar")
+			// the x axis is still not updating
+			d3.select("#xaxis").selectAll("text")
 				.data(sliced)
-				.enter()
+				.attr("transform", function(d) {
+					return "rotate(-65)"
+				});
+
+			// this gets stuck bc I think the xaxis isn't updating
+			// and so new premises mess up the positioning
+			d3.selectAll(".Bar")
+				.data(sliced)
+				.transition()
+				.duration(1000)
 				.attr('x', (d) => xScale(d.type))
 				.attr('y', (d) => yScale(d.count))
 				.attr('height', (d) => 200 - yScale(d.count))
 
+			tooltip.style("top", (d3.event.pageY - 10) + "px")
+				.style("left", (d3.event.pageX + 10) + "px")
+				.data(sliced)
+				.transition()
+				.duration(100)
+				.style("visibility", "visible")
+				.text( (d) => d.count + " crimes");
 		}
 
 		// bar graph setup
@@ -547,10 +563,12 @@ Promise.all([
 
 		// y axis
 		chart.append('g')
+		        .attr('id', 'yaxis')
 			.call(d3.axisLeft(yScale));
 
 		// x axis
 		chart.append('g')
+		        .attr('id', 'xaxis')
 			.attr('transform', `translate(0, 200)`)
 			.call(d3.axisBottom(xScale))
 			.selectAll("text")	

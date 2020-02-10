@@ -14,7 +14,7 @@ var projection = d3.geoMercator()
 var path = d3.geoPath()
 	.projection(projection);
 
-var sliced = {}; 
+var sliced = []; 
 var crimeTypes = [];
 var inputValue = "January";
 var dates = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
@@ -26,9 +26,9 @@ var colorScale = d3.scaleThreshold()
 	.range(d3.schemePurples[5]);
 
 var legendColor = d3.legendColor()
-    .labelFormat(d3.format(".0f"))
-    .labels(d3.legendHelpers.thresholdLabels)
-    .scale(colorScale);
+	.labelFormat(d3.format(".0f"))
+	.labels(d3.legendHelpers.thresholdLabels)
+	.scale(colorScale);
 
 var boroughName = function (d) {
 	d.properties.BoroName.replace(/ /g, '');
@@ -48,8 +48,8 @@ var getText = function (d) {
 			for (var i = 0; i < crimeTypes.length; i++) {
 				curr = crimeTypes[i];
 				if (mapDict["AllMonths"][name.toUpperCase()][curr]) {
-                	c += mapDict["AllMonths"][name.toUpperCase()][curr];
-                }
+					c += mapDict["AllMonths"][name.toUpperCase()][curr];
+				}
 			}
 		}
 	} else {
@@ -59,8 +59,8 @@ var getText = function (d) {
 			for (var i = 0; i < crimeTypes.length; i++) {
 				curr = crimeTypes[i];
 				if (mapDict[inputValue][name.toUpperCase()][curr]) {
-                    c += mapDict[inputValue][name.toUpperCase()][curr];
-                }
+					c += mapDict[inputValue][name.toUpperCase()][curr];
+				}
 			}
 		}
 	}
@@ -89,8 +89,8 @@ let mapMouseOver = function (d) {
 		.style("left", (d3.event.pageX + 10) + "px")
 		.transition()
 		.duration(100)
-	        .style("visibility", "visible")
-			.text(getText(d))
+		.style("visibility", "visible")
+		.text(getText(d))
 }
 
 let mapMouseMove = function (d) {
@@ -135,7 +135,7 @@ let chartMouseOver = function (d) {
 		.style("left", (d3.event.pageX + 10) + "px")
 		.transition()
 		.duration(100)
-	        .style("visibility", "visible")
+		.style("visibility", "visible")
 		.text(d.count + " crimes");
 }
 
@@ -192,14 +192,14 @@ Promise.all([
 			// all months all crimes
 			if (mapDict["AllMonths"] && barDict["AllMonths"]) {
 				if (barDict["AllMonths"]["AllCrimes"]) {
-                    if (barDict["AllMonths"]["AllCrimes"][premise]) { 
-                        barDict["AllMonths"]["AllCrimes"][premise] += 1
-                    } else {
-                        barDict["AllMonths"]["AllCrimes"][premise] = 1
-                    }
-                } else {
-                    barDict["AllMonths"]["AllCrimes"] = {}
-                    barDict["AllMonths"]["AllCrimes"][premise] = 1
+					if (barDict["AllMonths"]["AllCrimes"][premise]) { 
+						barDict["AllMonths"]["AllCrimes"][premise] += 1
+					} else {
+						barDict["AllMonths"]["AllCrimes"][premise] = 1
+					}
+				} else {
+					barDict["AllMonths"]["AllCrimes"] = {}
+					barDict["AllMonths"]["AllCrimes"][premise] = 1
 				}
 				if (mapDict["AllMonths"][name]) {
 					if (mapDict["AllMonths"][name]["AllCrimes"]) {
@@ -215,10 +215,10 @@ Promise.all([
 				mapDict["AllMonths"] = {}
 				mapDict["AllMonths"][name] = {}
 				mapDict["AllMonths"][name]["AllCrimes"] = 1
-				
+
 				barDict["AllMonths"] = {}
 				barDict["AllMonths"]["AllCrimes"] = {}
-                barDict["AllMonths"]["AllCrimes"][premise] = 1
+				barDict["AllMonths"]["AllCrimes"][premise] = 1
 			}
 
 			// all months specific crimes 
@@ -233,29 +233,29 @@ Promise.all([
 				mapDict["AllMonths"][name][crime] = 1
 			}
 			if (barDict["AllMonths"][crime]) {
-                if (barDict["AllMonths"][crime][premise]) {
-                    barDict["AllMonths"][crime][premise] += 1
-                } else {
-                    barDict["AllMonths"][crime][premise] = 1
-                }
-            } else {
-                barDict["AllMonths"][crime] = {}
-                barDict["AllMonths"][crime][premise] = 1
-            }
+				if (barDict["AllMonths"][crime][premise]) {
+					barDict["AllMonths"][crime][premise] += 1
+				} else {
+					barDict["AllMonths"][crime][premise] = 1
+				}
+			} else {
+				barDict["AllMonths"][crime] = {}
+				barDict["AllMonths"][crime][premise] = 1
+			}
 
 			//specific month, all crimes 
 			if (mapDict[month] && barDict[month]) {
 				if (barDict[month][premise]) {
-                    if (barDict[month]["AllCrimes"][premise]) { 
-                        barDict[month]["AllCrimes"][premise] += 1
-                    } else {
-                        barDict[month]["AllCrimes"][premise] = 1
-                    }
-                
-                } else {
-                    barDict[month]["AllCrimes"] = {}
-                    barDict[month]["AllCrimes"][premise] = 1
-                }
+					if (barDict[month]["AllCrimes"][premise]) { 
+						barDict[month]["AllCrimes"][premise] += 1
+					} else {
+						barDict[month]["AllCrimes"][premise] = 1
+					}
+
+				} else {
+					barDict[month]["AllCrimes"] = {}
+					barDict[month]["AllCrimes"][premise] = 1
+				}
 				if (mapDict[month][name]) {
 					if (mapDict[month][name]["AllCrimes"]) {
 						mapDict[month][name]["AllCrimes"] += 1
@@ -273,8 +273,8 @@ Promise.all([
 				mapDict[month][name]["AllCrimes"] = 1
 
 				barDict[month] = {}
-                barDict[month]["AllCrimes"] = {}
-                barDict[month]["AllCrimes"][premise] = 1
+				barDict[month]["AllCrimes"] = {}
+				barDict[month]["AllCrimes"][premise] = 1
 			}
 
 			// specific month, specific crimes
@@ -290,21 +290,19 @@ Promise.all([
 				mapDict[month][name][crime] = 1
 			}
 			if (barDict[month][crime]) {
-                if (barDict[month][crime][premise]) {
-                    barDict[month][crime][premise] += 1
-                } else {
-                    barDict[month][crime][premise] = 1
-                }
+				if (barDict[month][crime][premise]) {
+					barDict[month][crime][premise] += 1
+				} else {
+					barDict[month][crime][premise] = 1
+				}
 
-            } else {
-                barDict[month][crime] = {}
-                barDict[month][crime][premise] = 1
-            }
+			} else {
+				barDict[month][crime] = {}
+				barDict[month][crime][premise] = 1
+			}
 		}
 
 		console.log(barDict)
-
-
 
 		function handleCheckboxes() {
 			let newCounts = {}
@@ -315,7 +313,6 @@ Promise.all([
 					if (document.getElementById("all").checked) {
 						checkboxes = document.getElementsByTagName("input");
 						for (var i = 1; i < checkboxes.length; i++) {
-							console.log(checkboxes[i].checked);
 							checkboxes[i].checked = true;
 						}
 					} else {
@@ -343,7 +340,9 @@ Promise.all([
 			}
 			crimeTypes = JSON.parse(JSON.stringify(crimeTypesTemp));
 			d3.selectAll(".Borough")
-                .attr("fill", getMapCount);
+				.attr("fill", getMapCount);
+			updateBarStats()
+			updateBarChart()
 
 			// for (var i = 0; i < crime_data.length; i++) {
 			// 	if (crimeTypes.includes(crime_data[i]['offense_id'])) {
@@ -455,7 +454,7 @@ Promise.all([
 		}
 
 		function updateBarStats() {
-			var premiseStats = {} 
+			var premiseStats = {}; 
 			var currMonth = ""	
 			if (d3.select("#timecheck").property("checked")) {
 				currMonth = "AllMonths";
@@ -465,62 +464,77 @@ Promise.all([
 
 			// handles all crimes
 			if (d3.select("#all").property("checked")) {
-				for (var prem of barDict[currMonth]["AllCrimes"]) {
+				Object.keys(barDict[currMonth]["AllCrimes"]).forEach(function (prem) {
 					if (barDict[currMonth]["AllCrimes"][prem]) {
 						if (premiseStats[prem]) {
-							premiseStats[prem] += 1;
+							premiseStats[prem] += barDict[currMonth]["AllCrimes"][prem];
 						} else {
-							premiseStats[prem] = 1;
+							premiseStats[prem] = barDict[currMonth]["AllCrimes"][prem];
 						}	
 					} else {
 						if (premiseStats[prem]) {
-                            premiseStats[prem] += 0;
-                        } else {
-                            premiseStats[prem] = 0;
-                        }
+							premiseStats[prem] += 0;
+						} else {
+							premiseStats[prem] = 0;
+						}
 					}
-				} 
+				}) 
 			} else {
-				for (var i = 0; i = crimeTypes.length; i++) {
+				for (var i = 0; i < crimeTypes.length; i++) {
 					currCrime = crimeTypes[i];
-					for (var prem of barDict[currMonth][currCrime]) {
-    	                if (barDict[currMonth][currCrime][prem]) {
-        	                if (premiseStats[prem]) { 
-            	                premiseStats[prem] += 1;
-                	        } else {
-                    	        premiseStats[prem] = 1;
-                        	}   
-                    	} else {
-                    	    if (premiseStats[prem]) { 
-                        	    premiseStats[prem] += 0;
-                        	} else {
-                            	premiseStats[prem] = 0;
-                        	}
-                    	}
-					}
-                }  
+					Object.keys(barDict[currMonth][currCrime]).forEach(function (prem) {
+						if (barDict[currMonth][currCrime][prem]) {
+							if (premiseStats[prem]) { 
+								premiseStats[prem] += barDict[currMonth][currCrime][prem];
+							} else {
+								premiseStats[prem] = barDict[currMonth][currCrime][prem];
+							}   
+						} else {
+							if (premiseStats[prem]) { 
+								premiseStats[prem] += 0;
+							} else {
+								premiseStats[prem] = 0;
+							}
+						}
+					})
+				}  
 
 			}
+			
 			// Create items array
 			var crimes = new Array(Object.keys(premiseStats).length);
-        	i = 0
-        	Object.keys(premiseStats).forEach(function (key) {
-        		var value = premiseStates[key]
-        		crimes[i] = { "type": key, "count": value }
-        		i++
-        	})
-        	// sort the locations based on count, in ascending order
-        	crimes.sort((a, b) => (a.count > b.count) ? -1 : ((b.count > a.count) ? 1 : 0));
+			i = 0
+			Object.keys(premiseStats).forEach(function (key) {
+				var value = premiseStats[key]
+				crimes[i] = { "type": key, "count": value }
+				i++
+			})
+			// sort the locations based on count, in ascending order
+			crimes.sort((a, b) => (a.count > b.count) ? -1 : ((b.count > a.count) ? 1 : 0));
 
-			sliced = items.slice(0,5);
+
+			sliced = crimes.slice(0,5);
 			console.log(sliced.map);
-		}	
+			
+		}
+
+		function updateBarChart() {
+			console.log("?", sliced)
+			const chart = d3.selectAll(".Bar")
+				.data(sliced)
+				.enter()
+				.attr('x', (d) => xScale(d.type))
+				.attr('y', (d) => yScale(d.count))
+				.attr('height', (d) => 200 - yScale(d.count))
+
+		}
 
 		// bar graph setup
 		const yScale = d3.scaleLinear()
 			.range([200, 0])
 			.domain([0, 110000]);
 
+		updateBarStats()
 		const xScale = d3.scaleBand()
 			.range([0, 300])
 			.domain(sliced.map((d) => d.type))
@@ -543,7 +557,7 @@ Promise.all([
 			.attr("dy", ".15em")
 			.attr("transform", function(d) {
 				return "rotate(-65)" 
-				});
+			});
 
 		// bars
 		chart.selectAll()

@@ -423,6 +423,9 @@ Promise.all([
 
 			d3.selectAll(".Borough")
 				.attr("fill", getMapCount);
+
+			updateBarStats();
+			updateBarChart();
 		}
 
 		// fetchs data based on date selections
@@ -521,15 +524,33 @@ Promise.all([
 		}
 
 		function updateBarChart() {
-			// the x axis is still not updating
-			d3.select("#xaxis").selectAll("text")
-				.data(sliced)
+			const yScale = d3.scaleLinear()
+				.range([200, 0])
+				.domain([0, d3.max(sliced, (d) => d.count)]);
+
+			const xScale = d3.scaleBand()
+				.range([0, 300])
+				.domain(sliced.map((d) => d.type))
+				.padding(0.2)
+
+			d3.select("#yaxis")
+				.transition()
+				.duration(1000)
+				.call(d3.axisLeft(yScale));
+
+			d3.select("#xaxis")
+				.transition()
+				.duration(1000)
+				.attr('transform', `translate(0, 200)`)
+				.call(d3.axisBottom(xScale))
+				.selectAll("text")
+				.style("text-anchor", "end")
+				.attr("dx", "-.8em")
+				.attr("dy", ".15em")
 				.attr("transform", function(d) {
 					return "rotate(-65)"
 				});
 
-			// this gets stuck bc I think the xaxis isn't updating
-			// and so new premises mess up the positioning
 			d3.selectAll(".Bar")
 				.data(sliced)
 				.transition()
@@ -543,7 +564,6 @@ Promise.all([
 				.data(sliced)
 				.transition()
 				.duration(100)
-				.style("visibility", "visible")
 				.text( (d) => d.count + " crimes");
 		}
 

@@ -169,7 +169,7 @@ let chartMouseOut = function (d) {
 // all data functionality
 Promise.all([
 	d3.json("./data/boroughs.geojson"),
-	d3.csv("./data/nyc_crimez_filtered.csv"),
+	d3.csv("./data/NYC_Crime_Data.csv"),
 ]).then(
 	(data, reg) => {
 		filtered = {}
@@ -188,7 +188,7 @@ Promise.all([
 			
 			var month = dates[parts[0] - 1]
 			var name = [crime_data[i]["BORO_NM"]]
-			var crime = crime_data[i]['offense_id'];
+			var crime = crime_data[i]['PD_CD'];
 			var premise = crime_data[i]["PREM_TYP_DESC"];
 
 			if (name === "" || premise === "") {

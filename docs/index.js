@@ -182,11 +182,15 @@ Promise.all([
 			} else {
 				parts = date.split("/")
 			}
-
+			
 			var month = dates[parts[0] - 1]
 			var name = [crime_data[i]["BORO_NM"]]
 			var crime = crime_data[i]['offense_id'];
 			var premise = crime_data[i]["PREM_TYP_DESC"];
+
+			if (name === "" || premise === "") {
+				continue;
+			}
 			// all months all crimes
 			if (filtered["AllMonths"]) {
 				if (filtered["AllMonths"]["AllCrimes"]) {
@@ -232,7 +236,7 @@ Promise.all([
 
 			//specific month, all crimes 
 			if (filtered[month]) {
-				if (filtered[month][premise]) {
+				if (filtered[month]["AllCrimes"]) {
 					if (filtered[month]["AllCrimes"]["P " + premise]) { 
 						filtered[month]["AllCrimes"]["P " + premise] += 1
 					} else {
@@ -424,6 +428,9 @@ Promise.all([
 					}
 				}
 			}
+			console.log(inputValue);
+			console.log(filtered[inputValue]);
+			console.log(filtered[inputValue]["AllCrimes"]);
 			return colorScale(c);
 		}
 

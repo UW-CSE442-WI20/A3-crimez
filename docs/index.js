@@ -287,7 +287,7 @@ Promise.all([
 			let newCounts = {}
 			value = this.id;
 
-			if (value != "timecheck") {
+			if (value != "timecheck" && value != "timeslide") {
 				if (value == "all") {
 					if (document.getElementById("all").checked) {
 						checkboxes = document.getElementsByTagName("input");
@@ -402,6 +402,9 @@ Promise.all([
 
 			d3.selectAll(".Borough")
 				.attr("fill", getMapCount);
+
+			updateBarStats();
+			updateBarChart();
 		}
 
 		// fetchs data based on date selections
@@ -514,13 +517,47 @@ Promise.all([
 		}
 
 		function updateBarChart() {
-			const chart = d3.selectAll(".Bar")
+			const yScale = d3.scaleLinear()
+				.range([200, 0])
+				.domain([0, d3.max(sliced, (d) => d.count)]);
+
+			const xScale = d3.scaleBand()
+				.range([0, 300])
+				.domain(sliced.map((d) => d.type))
+				.padding(0.2)
+
+			d3.select("#yaxis")
+				.transition()
+				.duration(1000)
+				.call(d3.axisLeft(yScale));
+
+			d3.select("#xaxis")
+				.transition()
+				.duration(1000)
+				.attr('transform', `translate(0, 200)`)
+				.call(d3.axisBottom(xScale))
+				.selectAll("text")
+				.style("text-anchor", "end")
+				.attr("dx", "-.8em")
+				.attr("dy", ".15em")
+				.attr("transform", function(d) {
+					return "rotate(-65)"
+				});
+
+			d3.selectAll(".Bar")
 				.data(sliced)
-				.enter()
+				.transition()
+				.duration(1000)
 				.attr('x', (d) => xScale(d.type))
 				.attr('y', (d) => yScale(d.count))
 				.attr('height', (d) => 200 - yScale(d.count))
 
+			tooltip.style("top", (d3.event.pageY - 10) + "px")
+				.style("left", (d3.event.pageX + 10) + "px")
+				.data(sliced)
+				.transition()
+				.duration(100)
+				.text( (d) => d.count + " crimes");
 		}
 
 		// bar graph setup
@@ -539,10 +576,12 @@ Promise.all([
 
 		// y axis
 		chart.append('g')
+		        .attr('id', 'yaxis')
 			.call(d3.axisLeft(yScale));
 
 		// x axis
 		chart.append('g')
+		        .attr('id', 'xaxis')
 			.attr('transform', `translate(0, 200)`)
 			.call(d3.axisBottom(xScale))
 			.selectAll("text")	

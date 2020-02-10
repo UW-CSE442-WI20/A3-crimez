@@ -57,8 +57,11 @@ var getText = function (d) {
 		} else {
 			for (var i = 0; i < crimeTypes.length; i++) {
 				curr = crimeTypes[i];
-				if (filtered[inputValue][curr][name.toUpperCase()]) {
-					c += filtered[inputValue][curr][name.toUpperCase()];
+				if (filtered[inputValue][curr]) {
+					if (filtered[inputValue][curr][name.toUpperCase()]) {
+						console.log("!!!",crimeTypes)
+						c += filtered[inputValue][curr][name.toUpperCase()];
+					}
 				}
 			}
 		}
@@ -405,6 +408,7 @@ Promise.all([
 		function getMapCount(d) {
 			var name = d.properties.BoroName.toUpperCase();
 			var c = 0;
+			console.log(crimeTypes);
 			if (d3.select("#timecheck").property("checked")) {
 				if (d3.select("#all").property("checked")) {
 					c = filtered["AllMonths"]["AllCrimes"][name];
@@ -422,8 +426,10 @@ Promise.all([
 				} else {
 					for (var i = 0; i < crimeTypes.length; i++) {
 						curr = crimeTypes[i];
-						if (filtered[inputValue][curr][name]) {
-							c += filtered[inputValue][curr][name];
+						if (filtered[inputValue][curr]) {
+							if (filtered[inputValue][curr][name]) {
+								c += filtered[inputValue][curr][name];
+							}
 						}
 					}
 				}
@@ -466,24 +472,27 @@ Promise.all([
 			} else {
 				for (var i = 0; i < crimeTypes.length; i++) {
 					currCrime = crimeTypes[i];
+					if (filtered[currMonth][currCrime]) {
+
 					Object.keys(filtered[currMonth][currCrime]).forEach(function (prem) {
 						premParts = prem.split(" ");
 						if (premParts[0] == "P") {
-						if (filtered[currMonth][currCrime][prem]) {
-							if (premiseStats[premParts[1]]) { 
-								premiseStats[premParts[1]] += filtered[currMonth][currCrime][prem];
+							if (filtered[currMonth][currCrime][prem]) {
+								if (premiseStats[premParts[1]]) { 
+									premiseStats[premParts[1]] += filtered[currMonth][currCrime][prem];
+								} else {
+									premiseStats[premParts[1]] = filtered[currMonth][currCrime][prem];
+								}   
 							} else {
-								premiseStats[premParts[1]] = filtered[currMonth][currCrime][prem];
-							}   
-						} else {
-							if (premiseStats[premParts[1]]) { 
-								premiseStats[premParts[1]] += 0;
-							} else {
-								premiseStats[premParts[1]] = 0;
+								if (premiseStats[premParts[1]]) { 
+									premiseStats[premParts[1]] += 0;
+								} else {
+									premiseStats[premParts[1]] = 0;
+								}
 							}
 						}
-						}
 					})
+					}
 				}  
 
 			}

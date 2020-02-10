@@ -40,7 +40,6 @@ var locationName = function (d) {
 var getText = function (d) {
 	var name = d.properties.BoroName;
 	var c = 0;
-	console.log(crimeTypes);
 	if (d3.select("#timecheck").property("checked")) {
 		if (d3.select("#all").property("checked")) {
 			c = filtered["AllMonths"]["AllCrimes"][name.toUpperCase()];
@@ -191,10 +190,10 @@ Promise.all([
 			// all months all crimes
 			if (filtered["AllMonths"]) {
 				if (filtered["AllMonths"]["AllCrimes"]) {
-					if (filtered["AllMonths"]["AllCrimes"][premise]) { 
-						filtered["AllMonths"]["AllCrimes"][premise] += 1
+					if (filtered["AllMonths"]["AllCrimes"]["P " + premise]) { 
+						filtered["AllMonths"]["AllCrimes"]["P " + premise] += 1
 					} else {
-						filtered["AllMonths"]["AllCrimes"][premise] = 1
+						filtered["AllMonths"]["AllCrimes"]["P " + premise] = 1
 					}
 					if (filtered["AllMonths"]["AllCrimes"][name]) {
                         filtered["AllMonths"]["AllCrimes"][name] += 1
@@ -204,21 +203,21 @@ Promise.all([
 				} else {
 					filtered["AllMonths"]["AllCrimes"] = {}
 					filtered["AllMonths"]["AllCrimes"][name] = 1
-					filtered["AllMonths"]["AllCrimes"][premise] = 1
+					filtered["AllMonths"]["AllCrimes"]["P " + premise] = 1
 				}
 			} else {
 				filtered["AllMonths"] = {}
 				filtered["AllMonths"]["AllCrimes"] = {}
 				filtered["AllMonths"]["AllCrimes"][name] = 1
-				filtered["AllMonths"]["AllCrimes"][premise] = 1
+				filtered["AllMonths"]["AllCrimes"]["P " + premise] = 1
 			}
 
 			// all months specific crimes 
 			if (filtered["AllMonths"][crime]) {
-				if (filtered["AllMonths"][crime][premise]) {
-					filtered["AllMonths"][crime][premise] += 1
+				if (filtered["AllMonths"][crime]["P " + premise]) {
+					filtered["AllMonths"][crime]["P " + premise] += 1
 				} else {
-					filtered["AllMonths"][crime][premise] = 1
+					filtered["AllMonths"][crime]["P " + premise] = 1
 				}
 				if (filtered["AllMonths"][crime][name]) {
                     filtered["AllMonths"][crime][name] += 1
@@ -228,16 +227,16 @@ Promise.all([
 			} else {
 				filtered["AllMonths"][crime] = {}
 				filtered["AllMonths"][crime][name] = 1
-				filtered["AllMonths"][crime][premise] = 1
+				filtered["AllMonths"][crime]["P " + premise] = 1
 			}
 
 			//specific month, all crimes 
 			if (filtered[month]) {
 				if (filtered[month][premise]) {
-					if (filtered[month]["AllCrimes"][premise]) { 
-						filtered[month]["AllCrimes"][premise] += 1
+					if (filtered[month]["AllCrimes"]["P " + premise]) { 
+						filtered[month]["AllCrimes"]["P " + premise] += 1
 					} else {
-						filtered[month]["AllCrimes"][premise] = 1
+						filtered[month]["AllCrimes"]["P " + premise] = 1
 					}
 					if (filtered[month]["AllCrimes"][name]) {
                         filtered[month]["AllCrimes"][name] += 1
@@ -246,22 +245,22 @@ Promise.all([
                     }
 				} else {
 					filtered[month]["AllCrimes"] = {}
-					filtered[month]["AllCrimes"][premise] = 1
+					filtered[month]["AllCrimes"]["P " + premise] = 1
 					filtered[month]["AllCrimes"][name] = 1
 				}
 			} else {
 				filtered[month] = {}
 				filtered[month]["AllCrimes"] = {}
-				filtered[month]["AllCrimes"][premise] = 1
+				filtered[month]["AllCrimes"]["P " + premise] = 1
 				filtered[month]["AllCrimes"][name] = 1
 			}
 
 			// specific month, specific crimes
 			if (filtered[month][crime]) {
-				if (filtered[month][crime][premise]) {
-					filtered[month][crime][premise] += 1
+				if (filtered[month][crime]["P " + premise]) {
+					filtered[month][crime]["P " + premise] += 1
 				} else {
-					filtered[month][crime][premise] = 1
+					filtered[month][crime]["P " + premise] = 1
 				}
 				if (filtered[month][crime][name]) {
                     filtered[month][crime][name] += 1
@@ -270,7 +269,7 @@ Promise.all([
                 }
 			} else {
 				filtered[month][crime] = {}
-				filtered[month][crime][premise] = 1
+				filtered[month][crime]["P " + premise] = 1
 				filtered[month][crime][name] = 1
 			}
 		}
@@ -440,36 +439,42 @@ Promise.all([
 			// handles all crimes
 			if (d3.select("#all").property("checked")) {
 				Object.keys(filtered[currMonth]["AllCrimes"]).forEach(function (prem) {
+					premParts = prem.split(" ");
+                    if (premParts[0] == "P") {
 					if (filtered[currMonth]["AllCrimes"][prem]) {
-						if (premiseStats[prem]) {
-							premiseStats[prem] += filtered[currMonth]["AllCrimes"][prem];
+						if (premiseStats[premParts[1]]) {
+							premiseStats[premParts[1]] += filtered[currMonth]["AllCrimes"][prem];
 						} else {
-							premiseStats[prem] = filtered[currMonth]["AllCrimes"][prem];
+							premiseStats[premParts[1]] = filtered[currMonth]["AllCrimes"][prem];
 						}	
 					} else {
-						if (premiseStats[prem]) {
-							premiseStats[prem] += 0;
+						if (premiseStats[premParts[1]]) {
+							premiseStats[premParts[1]] += 0;
 						} else {
-							premiseStats[prem] = 0;
+							premiseStats[premParts[1]] = 0;
 						}
+					}
 					}
 				}) 
 			} else {
 				for (var i = 0; i < crimeTypes.length; i++) {
 					currCrime = crimeTypes[i];
 					Object.keys(filtered[currMonth][currCrime]).forEach(function (prem) {
+						premParts = prem.split(" ");
+						if (premParts[0] == "P") {
 						if (filtered[currMonth][currCrime][prem]) {
-							if (premiseStats[prem]) { 
-								premiseStats[prem] += filtered[currMonth][currCrime][prem];
+							if (premiseStats[premParts[1]]) { 
+								premiseStats[premParts[1]] += filtered[currMonth][currCrime][prem];
 							} else {
-								premiseStats[prem] = filtered[currMonth][currCrime][prem];
+								premiseStats[premParts[1]] = filtered[currMonth][currCrime][prem];
 							}   
 						} else {
-							if (premiseStats[prem]) { 
-								premiseStats[prem] += 0;
+							if (premiseStats[premParts[1]]) { 
+								premiseStats[premParts[1]] += 0;
 							} else {
-								premiseStats[prem] = 0;
+								premiseStats[premParts[1]] = 0;
 							}
+						}
 						}
 					})
 				}  
@@ -489,12 +494,10 @@ Promise.all([
 
 
 			sliced = crimes.slice(0,5);
-			console.log(sliced.map);
 			
 		}
 
 		function updateBarChart() {
-			console.log("?", sliced)
 			const chart = d3.selectAll(".Bar")
 				.data(sliced)
 				.enter()

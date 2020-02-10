@@ -1,4 +1,4 @@
-var width = 960, height = 500;
+var width = 1200, height = 800;
 
 var svg = d3.select("#container")
 	.append("svg")
@@ -8,7 +8,7 @@ var svg = d3.select("#container")
 
 var projection = d3.geoMercator()
 	.center([-73.94, 40.70])
-	.scale(50000)
+	.scale(80000)
 	.translate([300, 300]);
 
 var path = d3.geoPath()
@@ -343,24 +343,6 @@ Promise.all([
 				.attr("fill", getMapCount);
 			updateBarStats()
 			updateBarChart()
-
-			// for (var i = 0; i < crime_data.length; i++) {
-			// 	if (crimeTypes.includes(crime_data[i]['offense_id'])) {
-			// 		let boroughKey = newCounts[crime_data[i]["BORO_NM"]];
-
-			// 		if (boroughKey) {
-			// 			newCounts[crime_data[i]["BORO_NM"]] += 1;
-			// 		} else {
-			// 			newCounts[crime_data[i]["BORO_NM"]] = 1;
-			// 		}
-			// 	}
-			// }
-
-			// console.log("func", newCounts);
-
-			// d3.selectAll(".Borough").attr("fill", function (d) {
-			// 	return colorScale(newCounts[d.properties["BoroName"].toUpperCase()]);
-			// });
 		}
 
 		// checkboxes
@@ -375,7 +357,8 @@ Promise.all([
 		// draw each country
 			.attr("d", d3.geoPath().projection(projection))
 			.attr("id", (d) => boroughName(d))
-
+			.attr("transform", "translate(200,120)")
+			
 		// set the color of each country
 			.attr("fill", function (d) {
 				return getMapCount(d);
@@ -387,7 +370,7 @@ Promise.all([
 
 		// Draw the legend
 		legend = d3.select("#map").append("g")
-			.attr("transform", "translate(500,10)")
+			.attr("transform", "translate(800,50)")
 			.call(legendColor);
 
 		var legend = d3.legendColor()

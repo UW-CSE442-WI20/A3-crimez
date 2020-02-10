@@ -308,7 +308,7 @@ Promise.all([
 			let newCounts = {}
 			value = this.id;
 
-			if (value != "timecheck") {
+			if (value != "timecheck" && value != "timeslide") {
 				if (value == "all") {
 					if (document.getElementById("all").checked) {
 						checkboxes = document.getElementsByTagName("input");

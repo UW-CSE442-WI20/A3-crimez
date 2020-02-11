@@ -19,7 +19,9 @@
 ### How to run our code locally
 
 Run `npm start` in the root direction or `python -m SimpleHTTPServer`
+
 (For lab windows machine python -m http.server 8000)
+
 (For Lior: py -2 -m SimpleHTTPServer)
 
 

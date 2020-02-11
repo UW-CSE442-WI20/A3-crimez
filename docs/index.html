@@ -15,80 +15,126 @@
 </head>
 
 <body>
-	<h1>NYC Crime Distribution</h1>
-
+	<h1 style = "font-family:optima" >Distribution of Crime Across New York City</h1>
+	<h2 style = "font-family:optima" >How does the crime rate vary based on different factors?</h2>
 	<script src="index.js"></script>
 	<!-- this container holds the whole visualization -->
 	<div id="container" class="flex">
 		<!-- this container holds the left side of the visualization (slider, checks, bar graph) -->
 		<div id="filtersAndBar" class = "flex">
 			<div id="sliderContainer">
-				<h3>Filter By Time</h3>
-				<span id="range" style="opacity:0.4">Month: January</span>
+				<h3 style="font-family:optima">Filter By Time</h3>
+				<span id="range" style="font-family:optima" style="font-size:15px" style="opacity:0.4">Month: January</span>
 				&emsp;&emsp;&emsp;
-				<input id="timecheck" type="checkbox" checked> View All Months
-				<br>
+				<label class="checkboxContainer"> View All Months
+                	<input type="checkbox" id="timecheck" checked="checked">
+                    <span class="checkmark"></span>
+                </label>
 				<input id="timeslide" style="opacity:0.4" type="range" min="0" max="11" value="0" step="1" disabled/>
 				<br>
 				<br>
 			</div>
 			<form class="flex checkboxes">
 				<div id="filters" class = "flex">
-					<div class="active"><h3>Filter By Crime Type</h3></div>
+					<div class="active" style="font-family:optima"><h3>Filter By Crime Type</h3></div>
 					<div class="whatever flex" id="boxes" style="margin: auto">
 						<div>
-							<input type="checkbox" id="all" name="all" checked> All
-							<br>
-							<input type="checkbox" id="3" name="assault3" checked> Assault 3
-							<br>
-							<input type="checkbox" id="14" name="burglary" checked> Burglary
-							<br>
-							<input type="checkbox" id="9" name="criminalmischief" checked> Criminal mischief
-							<br>
-							<input type="checkbox" id="15" name="criminaltrespass" checked> Criminal trespass
-							<br>
-							<input type="checkbox" id="2" name="dangerousdrugs" checked> Dangerous drugs
-							<br>
-							<input type="checkbox" id="5" name="dangerousweapons" checked> Dangerous weapons
-							<br>
-							<input type="checkbox" id="4" name="felonyassault" checked> Felony assault
-							<br>
-							<input type="checkbox" id="1" name="forgery" checked> Forgery
-							<br>
-							<input type="checkbox" id="17" name="frauds" checked> Frauds
-							<br>
-							<input type="checkbox" id="7" name="grandlarceny" checked> Grand larceny
-							<br>
+							<label class="checkboxContainer"> All 
+								<input type="checkbox" id="all" checked="checked">
+  								<span class="checkmark"></span>
+							</label>
+							<label class="checkboxContainer"> Assault 3
+                                <input type="checkbox" id="3" checked="checked">
+                                <span class="checkmark"></span>
+                            </label>
+							<label class="checkboxContainer"> Burglary
+                                <input type="checkbox" id="14" checked="checked">
+                                <span class="checkmark"></span>
+                            </label>
+							<label class="checkboxContainer"> Criminal mischief 
+                                <input type="checkbox" id="9" checked="checked">
+                                <span class="checkmark"></span>
+                            </label>
+							 <label class="checkboxContainer"> Criminal trespass
+                                <input type="checkbox" id="15" checked="checked">
+                                <span class="checkmark"></span>
+                            </label>
+							 <label class="checkboxContainer"> Dangerous drugs
+                                <input type="checkbox" id="2" checked="checked">
+                                <span class="checkmark"></span>
+                            </label>
+							 <label class="checkboxContainer"> Dangerous weapons
+                                <input type="checkbox" id="5" checked="checked">
+                                <span class="checkmark"></span>
+                            </label>
+							 <label class="checkboxContainer"> Felony assault
+                                <input type="checkbox" id="4" checked="checked">
+                                <span class="checkmark"></span>
+                            </label>
+							 <label class="checkboxContainer"> Forgery
+                                <input type="checkbox" id="1" checked="checked">
+                                <span class="checkmark"></span>
+                            </label>
+							 <label class="checkboxContainer"> Fraud 
+                                <input type="checkbox" id="17" checked="checked">
+                                <span class="checkmark"></span>
+                            </label>
+							 <label class="checkboxContainer"> Grand larceny
+                                <input type="checkbox" id="7" checked="checked">
+                                <span class="checkmark"></span>
+                            </label>
 						</div>
 						<div>
-							<input type="checkbox" id="18" name="grandlarcenyofmotorvehicles" checked> Grand larceny of motor vehicles
-							<br>
-							<input type="checkbox" id="12" name="harassment2" checked> Harassment 2
-							<br>
-							<input type="checkbox" id="11" name="intoxicatedandimpaireddriving" checked> Intoxicated &amp; impaired driving
-							<br>
-							<input type="checkbox" id="6" name="petitlarceny" checked> Petit larceny
-							<br>
-							<input type="checkbox" id="10" name="rape" checked> Rape
-							<br>
-							<input type="checkbox" id="8" name="robbery" checked> Robbery
-							<br>
-							<input type="checkbox" id="13" name="sexcrimes" checked> Sex crimes
-							<br>
-							<input type="checkbox" id="19" name="arson" checked> Arson
-							<br>
-							<input type="checkbox" id="20" name="possessionofstolenproperty" checked> Possession of stolen property
-							<br>
-							<input type="checkbox" id="21" name="theftfraud" checked> Theft-fraud
-							<br>
-							<input type="checkbox" id="16" name="vehicleandtrafficlaws" checked> Vehicle and traffic laws
-							<br>
-							<br>
+							<label class="checkboxContainer"> Grand larceny of motor vehicles
+                                <input type="checkbox" id="18" checked="checked">
+                                <span class="checkmark"></span>
+                            </label>
+                            <label class="checkboxContainer"> Harassment 2
+                                <input type="checkbox" id="12" checked="checked">
+                                <span class="checkmark"></span>
+                            </label>
+                             <label class="checkboxContainer"> Intoxicated &amp; impaired driving
+                                <input type="checkbox" id="11" checked="checked">
+                                <span class="checkmark"></span>
+                            </label>
+                             <label class="checkboxContainer"> Petit larceny
+                                <input type="checkbox" id="6" checked="checked">
+                                <span class="checkmark"></span>
+                            </label>
+                             <label class="checkboxContainer"> Rape
+                                <input type="checkbox" id="10" checked="checked">
+                                <span class="checkmark"></span>
+                            </label>
+                             <label class="checkboxContainer"> Robbery
+                                <input type="checkbox" id="8" checked="checked">
+                                <span class="checkmark"></span>
+                            </label>
+                             <label class="checkboxContainer"> Sex crimes
+                                <input type="checkbox" id="13" checked="checked">
+                                <span class="checkmark"></span>
+                            </label>
+                             <label class="checkboxContainer"> Arson
+                                <input type="checkbox" id="19" checked="checked">
+                                <span class="checkmark"></span>
+                            </label>
+                             <label class="checkboxContainer"> Possession of stolen property
+                                <input type="checkbox" id="20" checked="checked">
+                                <span class="checkmark"></span>
+                            </label>
+							<label class="checkboxContainer"> Theft-fraud
+                                <input type="checkbox" id="21" checked="checked">
+                                <span class="checkmark"></span>
+                            </label>
+							<label class="checkboxContainer"> Vehicle and traffic laws 
+                                <input type="checkbox" id="16" checked="checked">
+                                <span class="checkmark"></span>
+                            </label>
 						</div>
 					</div>
 				</div>
 			</form>
 			<div id="barGraph" class="flex" style="margin: auto">
+				<div class="active" style="font-family:optima"><h3>Number of Crimes by Most Common Premise Types</h3></div>
 				<svg id="bar" width="400" height="400" style="margin: auto"></svg>
 			</div>
 		</div>

@@ -176,7 +176,7 @@ let chartMouseOut = function (d) {
 // all data functionality
 Promise.all([
 	d3.json("./data/boroughs.geojson"),
-	d3.csv("./data/NYC_Crime_Data.csv"),
+	d3.csv("./data/NYC_Crime_Data(new).csv"),
 ]).then(
 	(data, reg) => {
 		filtered = {}
@@ -195,7 +195,7 @@ Promise.all([
 			
 			var month = dates[parts[0] - 1]
 			var name = [crime_data[i]["BORO_NM"]]
-			var crime = crime_data[i]['PD_CD'];
+			var crime = crime_data[i]['offense_id'];
 			var premise = crime_data[i]["PREM_TYP_DESC"];
 
 			if (name === "" || premise === "") {
@@ -288,7 +288,6 @@ Promise.all([
 			}
 		}
 
-		console.log(filtered)
 
 		function handleCheckboxes() {
 			let newCounts = {}
@@ -404,6 +403,7 @@ Promise.all([
 					if (d3.select("#all").property("checked")) {
 						count = filtered["AllMonths"]["AllCrimes"][name];
 					} else {
+						
 						for (var i = 0; i < crimeTypes.length; i++) {
 							curr = crimeTypes[i];
 							if (filtered["AllMonths"][curr][name]) {
@@ -437,7 +437,6 @@ Promise.all([
 			updateDomain()
 			var name = d.properties.BoroName.toUpperCase();
 			var count = crime_boro_data[name]
-			console.log(crimeTypes);
 			return colorScale(count);
 		}
 

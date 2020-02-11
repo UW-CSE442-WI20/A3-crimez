@@ -176,13 +176,13 @@ let chartMouseOut = function (d) {
 // all data functionality
 Promise.all([
 	d3.json("./data/boroughs.geojson"),
-	d3.csv("./data/NYC_Crime_Data(new).csv"),
+	d3.csv("./data/NYC_Crime_Data(new1).csv"),
 ]).then(
 	(data, reg) => {
 		filtered = {}
 		let geo_data = data[0]
 		let crime_data = data[1]
-
+		console.log(crime_data)
 		// calculate month hash
 		for (var i = 0; i < crime_data.length; i++) {
 			var date = crime_data[i]["CMPLNT_FR_DT"]

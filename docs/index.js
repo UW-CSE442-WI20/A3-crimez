@@ -16,7 +16,7 @@ var path = d3.geoPath()
 
 var sliced = []; 
 var crimeTypes = [];
-var inputValue = "January";
+var inputValue = 1990;
 var dates = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 var allBoros = ['BROOKLYN', 'QUEENS', 'MANHATTAN', 'BRONX', 'STATEN ISLAND']
 
@@ -49,12 +49,12 @@ var getText = function (d) {
 	var c = 0;
 	if (d3.select("#timecheck").property("checked")) {
 		if (d3.select("#all").property("checked")) {
-			c = filtered["AllMonths"]["AllCrimes"][name.toUpperCase()];
+			c = filtered["AllYears"]["AllCrimes"][name.toUpperCase()];
 		} else {
 			for (var i = 0; i < crimeTypes.length; i++) {
 				curr = crimeTypes[i];
-				if (filtered["AllMonths"][curr][name.toUpperCase()]) {
-					c += filtered["AllMonths"][curr][name.toUpperCase()];
+				if (filtered["AllYears"][curr][name.toUpperCase()]) {
+					c += filtered["AllYears"][curr][name.toUpperCase()];
 				}
 			}
 		}
@@ -183,7 +183,7 @@ Promise.all([
 		let geo_data = data[0]
 		let crime_data = data[1]
 
-		// calculate month hash
+		// calculate year hash
 		for (var i = 0; i < crime_data.length; i++) {
 			var date = crime_data[i]["CMPLNT_FR_DT"]
 			parts = [];
@@ -193,7 +193,7 @@ Promise.all([
 				parts = date.split("/")
 			}
 			
-			var month = dates[parts[0] - 1]
+			var year = parts[2]
 			var name = [crime_data[i]["BORO_NM"]]
 			var crime = crime_data[i]['PD_CD'];
 			var premise = crime_data[i]["PREM_TYP_DESC"];
@@ -201,90 +201,93 @@ Promise.all([
 			if (name === "" || premise === "") {
 				continue;
 			}
-			// all months all crimes
-			if (filtered["AllMonths"]) {
-				if (filtered["AllMonths"]["AllCrimes"]) {
-					if (filtered["AllMonths"]["AllCrimes"]["P " + premise]) { 
-						filtered["AllMonths"]["AllCrimes"]["P " + premise] += 1
+			if (year < 1990) {
+                continue;
+            }
+			// all years all crimes
+			if (filtered["AllYears"]) {
+				if (filtered["AllYears"]["AllCrimes"]) {
+					if (filtered["AllYears"]["AllCrimes"]["P " + premise]) { 
+						filtered["AllYears"]["AllCrimes"]["P " + premise] += 1
 					} else {
-						filtered["AllMonths"]["AllCrimes"]["P " + premise] = 1
+						filtered["AllYears"]["AllCrimes"]["P " + premise] = 1
 					}
-					if (filtered["AllMonths"]["AllCrimes"][name]) {
-                        filtered["AllMonths"]["AllCrimes"][name] += 1
+					if (filtered["AllYears"]["AllCrimes"][name]) {
+                        filtered["AllYears"]["AllCrimes"][name] += 1
                     } else {
-                        filtered["AllMonths"]["AllCrimes"][name] = 1
+                        filtered["AllYears"]["AllCrimes"][name] = 1
                     }
 				} else {
-					filtered["AllMonths"]["AllCrimes"] = {}
-					filtered["AllMonths"]["AllCrimes"][name] = 1
-					filtered["AllMonths"]["AllCrimes"]["P " + premise] = 1
+					filtered["AllYears"]["AllCrimes"] = {}
+					filtered["AllYears"]["AllCrimes"][name] = 1
+					filtered["AllYears"]["AllCrimes"]["P " + premise] = 1
 				}
 			} else {
-				filtered["AllMonths"] = {}
-				filtered["AllMonths"]["AllCrimes"] = {}
-				filtered["AllMonths"]["AllCrimes"][name] = 1
-				filtered["AllMonths"]["AllCrimes"]["P " + premise] = 1
+				filtered["AllYears"] = {}
+				filtered["AllYears"]["AllCrimes"] = {}
+				filtered["AllYears"]["AllCrimes"][name] = 1
+				filtered["AllYears"]["AllCrimes"]["P " + premise] = 1
 			}
 
-			// all months specific crimes 
-			if (filtered["AllMonths"][crime]) {
-				if (filtered["AllMonths"][crime]["P " + premise]) {
-					filtered["AllMonths"][crime]["P " + premise] += 1
+			// all years specific crimes 
+			if (filtered["AllYears"][crime]) {
+				if (filtered["AllYears"][crime]["P " + premise]) {
+					filtered["AllYears"][crime]["P " + premise] += 1
 				} else {
-					filtered["AllMonths"][crime]["P " + premise] = 1
+					filtered["AllYears"][crime]["P " + premise] = 1
 				}
-				if (filtered["AllMonths"][crime][name]) {
-                    filtered["AllMonths"][crime][name] += 1
+				if (filtered["AllYears"][crime][name]) {
+                    filtered["AllYears"][crime][name] += 1
                 } else {
-                    filtered["AllMonths"][crime][name] = 1
+                    filtered["AllYears"][crime][name] = 1
                 }
 			} else {
-				filtered["AllMonths"][crime] = {}
-				filtered["AllMonths"][crime][name] = 1
-				filtered["AllMonths"][crime]["P " + premise] = 1
+				filtered["AllYears"][crime] = {}
+				filtered["AllYears"][crime][name] = 1
+				filtered["AllYears"][crime]["P " + premise] = 1
 			}
 
-			//specific month, all crimes 
-			if (filtered[month]) {
-				if (filtered[month]["AllCrimes"]) {
-					if (filtered[month]["AllCrimes"]["P " + premise]) { 
-						filtered[month]["AllCrimes"]["P " + premise] += 1
+			//specific year, all crimes 
+			if (filtered[year]) {
+				if (filtered[year]["AllCrimes"]) {
+					if (filtered[year]["AllCrimes"]["P " + premise]) { 
+						filtered[year]["AllCrimes"]["P " + premise] += 1
 					} else {
-						filtered[month]["AllCrimes"]["P " + premise] = 1
+						filtered[year]["AllCrimes"]["P " + premise] = 1
 					}
-					if (filtered[month]["AllCrimes"][name]) {
-                        filtered[month]["AllCrimes"][name] += 1
+					if (filtered[year]["AllCrimes"][name]) {
+                        filtered[year]["AllCrimes"][name] += 1
                     } else {
-                        filtered[month]["AllCrimes"][name] = 1
+                        filtered[year]["AllCrimes"][name] = 1
                     }
 				} else {
-					filtered[month]["AllCrimes"] = {}
-					filtered[month]["AllCrimes"]["P " + premise] = 1
-					filtered[month]["AllCrimes"][name] = 1
+					filtered[year]["AllCrimes"] = {}
+					filtered[year]["AllCrimes"]["P " + premise] = 1
+					filtered[year]["AllCrimes"][name] = 1
 				}
 			} else {
-				filtered[month] = {}
-				filtered[month]["AllCrimes"] = {}
-				filtered[month]["AllCrimes"]["P " + premise] = 1
-				filtered[month]["AllCrimes"][name] = 1
+				filtered[year] = {}
+				filtered[year]["AllCrimes"] = {}
+				filtered[year]["AllCrimes"]["P " + premise] = 1
+				filtered[year]["AllCrimes"][name] = 1
 			}
 
-			// specific month, specific crimes
-			if (filtered[month][crime]) {
-				if (filtered[month][crime]["P " + premise]) {
-					filtered[month][crime]["P " + premise] += 1
+			// specific year, specific crimes
+			if (filtered[year][crime]) {
+				if (filtered[year][crime]["P " + premise]) {
+					filtered[year][crime]["P " + premise] += 1
 				} else {
-					filtered[month][crime]["P " + premise] = 1
+					filtered[year][crime]["P " + premise] = 1
 				}
-				if (filtered[month][crime][name]) {
-                    filtered[month][crime][name] += 1
+				if (filtered[year][crime][name]) {
+                    filtered[year][crime][name] += 1
                 } else {
-                    filtered[month][crime][name] = 1
+                    filtered[year][crime][name] = 1
                 }
 			} else {
-				filtered[month][crime] = {}
-				filtered[month][crime]["P " + premise] = 1
-				filtered[month][crime][name] = 1
+				filtered[year][crime] = {}
+				filtered[year][crime]["P " + premise] = 1
+				filtered[year][crime][name] = 1
 			}
 		}
 
@@ -386,8 +389,8 @@ Promise.all([
 					document.getElementById("timeslide").disabled = false;
 				}
 			} else {
-				document.getElementById("range").innerHTML = "Month: " + dates[value];
-				inputValue = dates[value];
+				document.getElementById("range").innerHTML = "Year: " + value;
+				inputValue = value;
 			}
 
 			d3.selectAll(".Borough")
@@ -402,12 +405,12 @@ Promise.all([
 				let count = 0;
 				if (d3.select("#timecheck").property("checked")) {
 					if (d3.select("#all").property("checked")) {
-						count = filtered["AllMonths"]["AllCrimes"][name];
+						count = filtered["AllYears"]["AllCrimes"][name];
 					} else {
 						for (var i = 0; i < crimeTypes.length; i++) {
 							curr = crimeTypes[i];
-							if (filtered["AllMonths"][curr][name]) {
-								count += filtered["AllMonths"][curr][name];
+							if (filtered["AllYears"][curr][name]) {
+								count += filtered["AllYears"][curr][name];
 							}
 						}
 					}
@@ -443,24 +446,24 @@ Promise.all([
 
 		function updateBarStats() {
 			var premiseStats = {}; 
-			var currMonth = ""	
+			var currYear = ""	
 			if (d3.select("#timecheck").property("checked")) {
-				currMonth = "AllMonths";
+				currYear = "AllYears";
 			} else {
-				currMonth = inputValue;
+				currYear = inputValue;
 			}
 
 			// handles all crimes
 			if (d3.select("#all").property("checked")) {
-				Object.keys(filtered[currMonth]["AllCrimes"]).forEach(function (prem) {
+				Object.keys(filtered[currYear]["AllCrimes"]).forEach(function (prem) {
 					premParts = prem.split(" ");
                     if (prem.substring(0,2) == "P ") {
 						let location = prem.substring(2)
-						if (filtered[currMonth]["AllCrimes"][prem]) {
+						if (filtered[currYear]["AllCrimes"][prem]) {
 							if (premiseStats[location]) {
-								premiseStats[location] += filtered[currMonth]["AllCrimes"][prem];
+								premiseStats[location] += filtered[currYear]["AllCrimes"][prem];
 							} else {
-								premiseStats[location] = filtered[currMonth]["AllCrimes"][prem];
+								premiseStats[location] = filtered[currYear]["AllCrimes"][prem];
 							}	
 						} else {
 							if (premiseStats[location]) {
@@ -474,17 +477,17 @@ Promise.all([
 			} else {
 				for (var i = 0; i < crimeTypes.length; i++) {
 					currCrime = crimeTypes[i];
-					if (filtered[currMonth][currCrime]) {
+					if (filtered[currYear][currCrime]) {
 
-					Object.keys(filtered[currMonth][currCrime]).forEach(function (prem) {
+					Object.keys(filtered[currYear][currCrime]).forEach(function (prem) {
 						premParts = prem.split(" ");
 						let location = prem.substring(2)
 						if (prem.substring(0,2) == "P ") {
-							if (filtered[currMonth][currCrime][prem]) {
+							if (filtered[currYear][currCrime][prem]) {
 								if (premiseStats[location]) { 
-									premiseStats[location] += filtered[currMonth][currCrime][prem];
+									premiseStats[location] += filtered[currYear][currCrime][prem];
 								} else {
-									premiseStats[location] = filtered[currMonth][currCrime][prem];
+									premiseStats[location] = filtered[currYear][currCrime][prem];
 								}   
 							} else {
 								if (premiseStats[location]) { 

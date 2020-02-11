@@ -512,10 +512,17 @@ Promise.all([
 			})
 			// sort the locations based on count, in ascending order
 			crimes.sort((a, b) => (a.count > b.count) ? -1 : ((b.count > a.count) ? 1 : 0));
-
-
-			sliced = crimes.slice(0,5);
-			
+			console.log("!!",crimes)
+            if (crimes.length < 5) {
+                prev = crimes.length;
+                for (var i = 0; i < 5-prev; i++) {
+                    crimes[i + prev] = { "type": "", "count": 0 }
+                }
+                sliced = crimes.slice(0,5);
+            } else {
+                sliced = crimes.slice(0,5);
+            }
+            console.log("!", sliced);
 		}
 
 		function updateBarChart() {

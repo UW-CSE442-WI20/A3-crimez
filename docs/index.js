@@ -531,7 +531,7 @@ Promise.all([
 			d3.select("#yaxis")
 				.transition()
 				.duration(1000)
-				.call(d3.axisLeft(yScale));
+				.call(d3.axisLeft(yScale).ticks(5));
 
 			d3.select("#xaxis")
 				.transition()

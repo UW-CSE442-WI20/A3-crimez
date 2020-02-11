@@ -16,13 +16,20 @@ var path = d3.geoPath()
 
 var sliced = []; 
 var crimeTypes = [];
-var inputValue = "January";
-var dates = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+var inputValue = "Jan";
+var dates = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+var allBoros = ['BROOKLYN', 'QUEENS', 'MANHATTAN', 'BRONX', 'STATEN ISLAND']
+
+var crime_boro_data = {'BROOKLYN': 0, 'QUEENS': 0, 'MANHATTAN': 0, 'BRONX': 0, 'STATEN ISLAND': 0}
+
+var sortColorRange = (data) => {
+	return Object.values(data).sort((a, b) => a-b)
+}
 
 // Data and color scale
+var domain = []
 var data = d3.map();
 var colorScale = d3.scaleThreshold()
-	.domain([1, 5000, 8000, 10000, 20000])
 	.range(d3.schemePurples[5]);
 
 var legendColor = d3.legendColor()
@@ -169,7 +176,7 @@ let chartMouseOut = function (d) {
 // all data functionality
 Promise.all([
 	d3.json("./data/boroughs.geojson"),
-	d3.csv("./data/nyc_crimez_filtered.csv"),
+	d3.csv("./data/NYC_Crime_Data.csv"),
 ]).then(
 	(data, reg) => {
 		filtered = {}
@@ -188,7 +195,7 @@ Promise.all([
 			
 			var month = dates[parts[0] - 1]
 			var name = [crime_data[i]["BORO_NM"]]
-			var crime = crime_data[i]['offense_id'];
+			var crime = crime_data[i]['PD_CD'];
 			var premise = crime_data[i]["PREM_TYP_DESC"];
 
 			if (name === "" || premise === "") {
@@ -390,40 +397,48 @@ Promise.all([
 			updateBarChart();
 		}
 
-		// fetchs data based on date selections
-		function getMapCount(d) {
-			var name = d.properties.BoroName.toUpperCase();
-			var c = 0;
-			console.log(crimeTypes);
-			if (d3.select("#timecheck").property("checked")) {
-				if (d3.select("#all").property("checked")) {
-					c = filtered["AllMonths"]["AllCrimes"][name];
-				} else {
-					for (var i = 0; i < crimeTypes.length; i++) {
-						curr = crimeTypes[i];
-						if (filtered["AllMonths"][curr][name]) {
-							c += filtered["AllMonths"][curr][name];
+		function updateDomain() {
+			allBoros.forEach((name) => {
+				let count = 0;
+				if (d3.select("#timecheck").property("checked")) {
+					if (d3.select("#all").property("checked")) {
+						count = filtered["AllMonths"]["AllCrimes"][name];
+					} else {
+						for (var i = 0; i < crimeTypes.length; i++) {
+							curr = crimeTypes[i];
+							if (filtered["AllMonths"][curr][name]) {
+								count += filtered["AllMonths"][curr][name];
+							}
 						}
 					}
-				}
-			} else {
-				if (d3.select("#all").property("checked")) {
-					c = filtered[inputValue]["AllCrimes"][name];
 				} else {
-					for (var i = 0; i < crimeTypes.length; i++) {
-						curr = crimeTypes[i];
-						if (filtered[inputValue][curr]) {
-							if (filtered[inputValue][curr][name]) {
-								c += filtered[inputValue][curr][name];
+					if (d3.select("#all").property("checked")) {
+						count = filtered[inputValue]["AllCrimes"][name];
+					} else {
+						for (var i = 0; i < crimeTypes.length; i++) {
+							curr = crimeTypes[i];
+							if (filtered[inputValue][curr]) {
+								if (filtered[inputValue][curr][name]) {
+									count += filtered[inputValue][curr][name];
+								}
 							}
 						}
 					}
 				}
-			}
-			console.log(inputValue);
-			console.log(filtered[inputValue]);
-			console.log(filtered[inputValue]["AllCrimes"]);
-			return colorScale(c);
+				crime_boro_data[name] = count;
+			})
+
+			domain = sortColorRange(crime_boro_data)
+			colorScale.domain(domain)
+		}
+
+		// fetchs data based on date selections
+		function getMapCount(d) {
+			updateDomain()
+			var name = d.properties.BoroName.toUpperCase();
+			var count = crime_boro_data[name]
+			console.log(crimeTypes);
+			return colorScale(count);
 		}
 
 		function updateBarStats() {
@@ -439,20 +454,21 @@ Promise.all([
 			if (d3.select("#all").property("checked")) {
 				Object.keys(filtered[currMonth]["AllCrimes"]).forEach(function (prem) {
 					premParts = prem.split(" ");
-                    if (premParts[0] == "P") {
-					if (filtered[currMonth]["AllCrimes"][prem]) {
-						if (premiseStats[premParts[1]]) {
-							premiseStats[premParts[1]] += filtered[currMonth]["AllCrimes"][prem];
+                    if (prem.substring(0,2) == "P ") {
+						let location = prem.substring(2)
+						if (filtered[currMonth]["AllCrimes"][prem]) {
+							if (premiseStats[location]) {
+								premiseStats[location] += filtered[currMonth]["AllCrimes"][prem];
+							} else {
+								premiseStats[location] = filtered[currMonth]["AllCrimes"][prem];
+							}	
 						} else {
-							premiseStats[premParts[1]] = filtered[currMonth]["AllCrimes"][prem];
-						}	
-					} else {
-						if (premiseStats[premParts[1]]) {
-							premiseStats[premParts[1]] += 0;
-						} else {
-							premiseStats[premParts[1]] = 0;
+							if (premiseStats[location]) {
+								premiseStats[location] += 0;
+							} else {
+								premiseStats[location] = 0;
+							}
 						}
-					}
 					}
 				}) 
 			} else {
@@ -462,18 +478,19 @@ Promise.all([
 
 					Object.keys(filtered[currMonth][currCrime]).forEach(function (prem) {
 						premParts = prem.split(" ");
-						if (premParts[0] == "P") {
+						let location = prem.substring(2)
+						if (prem.substring(0,2) == "P ") {
 							if (filtered[currMonth][currCrime][prem]) {
-								if (premiseStats[premParts[1]]) { 
-									premiseStats[premParts[1]] += filtered[currMonth][currCrime][prem];
+								if (premiseStats[location]) { 
+									premiseStats[location] += filtered[currMonth][currCrime][prem];
 								} else {
-									premiseStats[premParts[1]] = filtered[currMonth][currCrime][prem];
+									premiseStats[location] = filtered[currMonth][currCrime][prem];
 								}   
 							} else {
-								if (premiseStats[premParts[1]]) { 
-									premiseStats[premParts[1]] += 0;
+								if (premiseStats[location]) { 
+									premiseStats[location] += 0;
 								} else {
-									premiseStats[premParts[1]] = 0;
+									premiseStats[location] = 0;
 								}
 							}
 						}
@@ -547,7 +564,7 @@ Promise.all([
 		// bar graph setup
 		const yScale = d3.scaleLinear()
 			.range([200, 0])
-			.domain([0, 110000]);
+			.domain([0, 140000]);
 
 		updateBarStats()
 		const xScale = d3.scaleBand()
@@ -594,5 +611,4 @@ Promise.all([
 
 	}).catch(function (err) {
 		console.log(err)
-	}
-	) 
+	}) 

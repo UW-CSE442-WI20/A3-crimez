@@ -427,7 +427,6 @@ Promise.all([
 				}
 				crime_boro_data[name] = count;
 			})
-			console.warn(crime_boro_data)
 
 			domain = sortColorRange(crime_boro_data)
 			colorScale.domain(domain)
@@ -455,20 +454,21 @@ Promise.all([
 			if (d3.select("#all").property("checked")) {
 				Object.keys(filtered[currMonth]["AllCrimes"]).forEach(function (prem) {
 					premParts = prem.split(" ");
-                    if (premParts[0] == "P") {
-					if (filtered[currMonth]["AllCrimes"][prem]) {
-						if (premiseStats[premParts[1]]) {
-							premiseStats[premParts[1]] += filtered[currMonth]["AllCrimes"][prem];
+                    if (prem.substring(0,2) == "P ") {
+						let location = prem.substring(2)
+						if (filtered[currMonth]["AllCrimes"][prem]) {
+							if (premiseStats[location]) {
+								premiseStats[location] += filtered[currMonth]["AllCrimes"][prem];
+							} else {
+								premiseStats[location] = filtered[currMonth]["AllCrimes"][prem];
+							}	
 						} else {
-							premiseStats[premParts[1]] = filtered[currMonth]["AllCrimes"][prem];
-						}	
-					} else {
-						if (premiseStats[premParts[1]]) {
-							premiseStats[premParts[1]] += 0;
-						} else {
-							premiseStats[premParts[1]] = 0;
+							if (premiseStats[location]) {
+								premiseStats[location] += 0;
+							} else {
+								premiseStats[location] = 0;
+							}
 						}
-					}
 					}
 				}) 
 			} else {
@@ -478,18 +478,19 @@ Promise.all([
 
 					Object.keys(filtered[currMonth][currCrime]).forEach(function (prem) {
 						premParts = prem.split(" ");
-						if (premParts[0] == "P") {
+						let location = prem.substring(2)
+						if (prem.substring(0,2) == "P ") {
 							if (filtered[currMonth][currCrime][prem]) {
-								if (premiseStats[premParts[1]]) { 
-									premiseStats[premParts[1]] += filtered[currMonth][currCrime][prem];
+								if (premiseStats[location]) { 
+									premiseStats[location] += filtered[currMonth][currCrime][prem];
 								} else {
-									premiseStats[premParts[1]] = filtered[currMonth][currCrime][prem];
+									premiseStats[location] = filtered[currMonth][currCrime][prem];
 								}   
 							} else {
-								if (premiseStats[premParts[1]]) { 
-									premiseStats[premParts[1]] += 0;
+								if (premiseStats[location]) { 
+									premiseStats[location] += 0;
 								} else {
-									premiseStats[premParts[1]] = 0;
+									premiseStats[location] = 0;
 								}
 							}
 						}

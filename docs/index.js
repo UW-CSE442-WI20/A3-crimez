@@ -18,11 +18,18 @@ var sliced = [];
 var crimeTypes = [];
 var inputValue = "January";
 var dates = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+var allBoros = ['BROOKLYN', 'QUEENS', 'MANHATTAN', 'BRONX', 'STATEN ISLAND']
+
+var crime_boro_data = {'BROOKLYN': 0, 'QUEENS': 0, 'MANHATTAN': 0, 'BRONX': 0, 'STATEN ISLAND': 0}
+
+var sortColorRange = (data) => {
+	return Object.values(data).sort((a, b) => a-b)
+}
 
 // Data and color scale
+var domain = []
 var data = d3.map();
 var colorScale = d3.scaleThreshold()
-	.domain([1, 5000, 8000, 10000, 20000])
 	.range(d3.schemePurples[5]);
 
 var legendColor = d3.legendColor()
@@ -390,40 +397,49 @@ Promise.all([
 			updateBarChart();
 		}
 
-		// fetchs data based on date selections
-		function getMapCount(d) {
-			var name = d.properties.BoroName.toUpperCase();
-			var c = 0;
-			console.log(crimeTypes);
-			if (d3.select("#timecheck").property("checked")) {
-				if (d3.select("#all").property("checked")) {
-					c = filtered["AllMonths"]["AllCrimes"][name];
-				} else {
-					for (var i = 0; i < crimeTypes.length; i++) {
-						curr = crimeTypes[i];
-						if (filtered["AllMonths"][curr][name]) {
-							c += filtered["AllMonths"][curr][name];
+		function updateDomain() {
+			allBoros.forEach((name) => {
+				let count = 0;
+				if (d3.select("#timecheck").property("checked")) {
+					if (d3.select("#all").property("checked")) {
+						count = filtered["AllMonths"]["AllCrimes"][name];
+					} else {
+						for (var i = 0; i < crimeTypes.length; i++) {
+							curr = crimeTypes[i];
+							if (filtered["AllMonths"][curr][name]) {
+								count += filtered["AllMonths"][curr][name];
+							}
 						}
 					}
-				}
-			} else {
-				if (d3.select("#all").property("checked")) {
-					c = filtered[inputValue]["AllCrimes"][name];
 				} else {
-					for (var i = 0; i < crimeTypes.length; i++) {
-						curr = crimeTypes[i];
-						if (filtered[inputValue][curr]) {
-							if (filtered[inputValue][curr][name]) {
-								c += filtered[inputValue][curr][name];
+					if (d3.select("#all").property("checked")) {
+						count = filtered[inputValue]["AllCrimes"][name];
+					} else {
+						for (var i = 0; i < crimeTypes.length; i++) {
+							curr = crimeTypes[i];
+							if (filtered[inputValue][curr]) {
+								if (filtered[inputValue][curr][name]) {
+									count += filtered[inputValue][curr][name];
+								}
 							}
 						}
 					}
 				}
-			}
-			console.log(inputValue);
-			console.log(filtered[inputValue]);
-			console.log(filtered[inputValue]["AllCrimes"]);
-			return colorScale(c);
+				crime_boro_data[name] = count;
+			})
+			console.warn(crime_boro_data)
+
+			domain = sortColorRange(crime_boro_data)
+			colorScale.domain(domain)
+		}
+
+		// fetchs data based on date selections
+		function getMapCount(d) {
+			updateDomain()
+			var name = d.properties.BoroName.toUpperCase();
+			var count = crime_boro_data[name]
+			console.log(crimeTypes);
+			return colorScale(count);
 		}
 
 		function updateBarStats() {
@@ -591,5 +607,4 @@ Promise.all([
 
 	}).catch(function (err) {
 		console.log(err)
-	}
-	) 
+	}) 

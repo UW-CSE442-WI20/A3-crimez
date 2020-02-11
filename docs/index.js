@@ -566,7 +566,7 @@ Promise.all([
 		// bar graph setup
 		const yScale = d3.scaleLinear()
 			.range([200, 0])
-			.domain([0, 140000]);
+			.domain([0, 130000]);
 
 		updateBarStats()
 		const xScale = d3.scaleBand()
@@ -580,7 +580,7 @@ Promise.all([
 		// y axis
 		chart.append('g')
 		        .attr('id', 'yaxis')
-			.call(d3.axisLeft(yScale));
+			.call(d3.axisLeft(yScale).ticks(5));
 
 		// x axis
 		chart.append('g')

@@ -551,6 +551,7 @@ Promise.all([
 				.attr('x', (d) => xScale(d.type))
 				.attr('y', (d) => yScale(d.count))
 				.attr('height', (d) => 200 - yScale(d.count))
+				.attr('fill', "#80cbc4");
 
 			tooltip.style("top", (d3.event.pageY - 10) + "px")
 				.style("left", (d3.event.pageX + 10) + "px")
@@ -602,9 +603,11 @@ Promise.all([
 			.attr('height', (d) => 200 - yScale(d.count))
 			.attr('width', xScale.bandwidth())
 			.attr("class", function (d) { return "Bar" })
+			.style("fill", function(d) { return "#82ada9"})
 			.on("mouseover", chartMouseOver)
 			.on("mousemove", chartMouseMove)
 			.on("mouseout", chartMouseOut);
+
 
 	}).catch(function (err) {
 		console.log(err)

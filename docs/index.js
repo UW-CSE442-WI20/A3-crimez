@@ -16,8 +16,8 @@ var path = d3.geoPath()
 
 var sliced = []; 
 var crimeTypes = [];
-var inputValue = "Jan";
-var dates = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+var inputValue = "January";
+var dates = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 var allBoros = ['BROOKLYN', 'QUEENS', 'MANHATTAN', 'BRONX', 'STATEN ISLAND']
 
 var crime_boro_data = {'BROOKLYN': 0, 'QUEENS': 0, 'MANHATTAN': 0, 'BRONX': 0, 'STATEN ISLAND': 0}

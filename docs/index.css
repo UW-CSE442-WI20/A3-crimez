@@ -2,9 +2,9 @@
 .checkboxContainer {
   display: block;
   position: relative;
-  padding-left: 30px;
+  padding-left: 25px;
   margin-bottom: 6px;
-  margin-left: 6px;
+  margin-left: 10px;
   cursor: pointer;
   font-size: 15px;
   -webkit-user-select: none;
@@ -87,34 +87,42 @@
 .checkboxes {
     width: 100%;
     justify-content: space-between;
-    border: 1px solid darkgray;
+    border: 1px solid #82ada9;
 }
 
 #sliderContainer {
     text-align: center;
     position: relative;
     width: 100%;
-    border:1px solid darkgray;
+    border:1px solid #82ada9;
+	border-radius: 10px 10px 0 0 ;
+}
+
+#titleContainer {
+    text-align: center;
+    max-width:700px;
+   	margin:auto;
+    border:1px solid #82ada9;
+    border-radius: 10px;
 }
 
 rect {
-    fill: darkgrey;
+    fill: #82ada9;
 }
 
 h1 {
     text-align: center;
-    padding-left: 125px;
 }
 
 #filtersAndBar {
     flex-direction: column;
-    /* border: 1px solid darkgray; */
 }
 
 #filters{
     display: flex;
     flex-wrap: wrap;
     flex-direction: row;
+	width: 455px;
 }
 
 .active {

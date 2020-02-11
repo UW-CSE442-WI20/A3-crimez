@@ -15,25 +15,26 @@
 </head>
 
 <body>
-	<h1 style = "font-family:optima" >Distribution of Crime Across New York City</h1>
-	<h2 style = "font-family:optima" >How does the crime rate vary based on different factors?</h2>
+	<div id="titleContainer">
+		<h1 style = "font-family:optima" >Distribution of Crime Across New York City</h1>
+	</div>
+	<h2 style = "font-family:optima" >How do the crime stats vary across different types of crime based on time of year and location?</h2>
 	<script src="index.js"></script>
 	<!-- this container holds the whole visualization -->
 	<div id="container" class="flex">
 		<!-- this container holds the left side of the visualization (slider, checks, bar graph) -->
 		<div id="filtersAndBar" class = "flex">
 			<div id="sliderContainer">
-				<h3 style="font-family:optima">Filter By Time</h3>
-				<div class="month flex" id="months" style="margin: auto">
+				<h3 style="font-family:optima">Filter by time:</h3>
+				<div class="month flex" id="months" style="margin: auto; text-align: center">
 					<div>
-						<span id="range" style="font-family:optima" style="font-size:15px" style="opacity:0.4">Month: Jan</span>
-					</div>
-					&emsp;&emsp;&emsp;
+                        <label class="checkboxContainer" style="margin-left: 85px"> View All Months
+                            <input type="checkbox" id="timecheck" checked="checked">
+                            <span class="checkmark"></span>
+                        </label>
+                    </div>
 					<div>
-						<label class="checkboxContainer"> View All Months
-                			<input type="checkbox" id="timecheck" checked="checked">
-                	    	<span class="checkmark"></span>
-                		</label>
+						<label id="range" style="font-size:15px; margin-left: 50px" style="opacity:0.4">Month: January</label>
 					</div>
 				</div>
 				<input id="timeslide" style="opacity:0.4" type="range" min="0" max="11" value="0" step="1" disabled/>
@@ -42,7 +43,7 @@
 			</div>
 			<form class="flex checkboxes">
 				<div id="filters" class = "flex">
-					<div class="active" style="font-family:optima"><h3>Filter By Crime Type</h3></div>
+					<div class="active" style="font-family:optima"><h3>Filter by crime type:</h3></div>
 					<div class="whatever flex" id="boxes" style="margin: auto">
 						<div>
 							<label class="checkboxContainer"> All 
@@ -139,9 +140,9 @@
 					</div>
 				</div>
             </form>
-            <div style="margin: auto; border:1px solid darkgray; width: 100%;">
+            <div style="border:1px solid #82ada9; width: 100%;">
                 <div class="active">
-                    <h3 style="font-family:optima">How does the crime rate vary by most-common premise type?</h3>
+                    <h3 style="font-family:optima">Difference in crime stats among the five most common premises:</h3>
                 </div>
                 <div id="barGraph" class="flex" style="margin: auto">
                     <svg id="bar" width="400" height="400" style="margin: auto"></svg>

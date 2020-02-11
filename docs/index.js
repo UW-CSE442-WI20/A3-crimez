@@ -546,7 +546,7 @@ Promise.all([
 		// bar graph setup
 		const yScale = d3.scaleLinear()
 			.range([200, 0])
-			.domain([0, 110000]);
+			.domain([0, 140000]);
 
 		updateBarStats()
 		const xScale = d3.scaleBand()

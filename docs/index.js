@@ -429,6 +429,9 @@ Promise.all([
 			})
 
 			domain = sortColorRange(crime_boro_data)
+			if (domain[4] == 0) {
+				domain = [0, 1] 
+			}
 			colorScale.domain(domain)
 		}
 

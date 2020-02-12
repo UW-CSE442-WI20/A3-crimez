@@ -79,14 +79,14 @@ body {
 
 .tooltip {
     padding: 8px;
-    font-family: optima;
+    font-family: Roboto;
     background-color: black;
     opacity: .7;
     color: white;
 }
 
 .legend {
-	font-family: optima;
+	font-family: Roboto;
 }
 
 .flex {
@@ -155,7 +155,7 @@ input[type="range"] {
 
 label {
     color:black;
-    font-family: optima;
+    font-family: Roboto;
 }
 
 /* #overview {

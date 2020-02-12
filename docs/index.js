@@ -16,7 +16,7 @@ var path = d3.geoPath()
 
 var sliced = [];
 var crimeTypes = [];
-var inputValue = 1990;
+var inputValue = 2009;
 var allBoros = ['BROOKLYN', 'QUEENS', 'MANHATTAN', 'BRONX', 'STATEN ISLAND']
 
 var crime_boro_data = { 'BROOKLYN': 0, 'QUEENS': 0, 'MANHATTAN': 0, 'BRONX': 0, 'STATEN ISLAND': 0 }
@@ -210,7 +210,7 @@ Promise.all([
 			
 
 			var year = parts[2]
-			console.log(year)
+			// console.log(year)
 			var name = [crime_data[i]["BORO_NM"]]
 			var crime = crime_data[i]['offense_id'];
 			var premise = crime_data[i]["PREM_TYP_DESC"];
@@ -593,7 +593,7 @@ Promise.all([
 		// bar graph setup
 		const yScale = d3.scaleLinear()
 			.range([200, 0])
-			.domain([0, 130000]);
+			.domain([0, 1500000]);
 
 		updateBarStats()
 		const xScale = d3.scaleBand()
@@ -602,7 +602,7 @@ Promise.all([
 			.padding(0.2)
 
 		const chart = d3.select("#bar").append('g')
-			.attr('transform', `translate(50, 50)`);
+			.attr('transform', `translate(60, 60)`);
 
 		// y axis
 		chart.append('g')

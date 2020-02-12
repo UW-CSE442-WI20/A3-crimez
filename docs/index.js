@@ -39,6 +39,7 @@ var legendColor = d3.legendColor()
 
 var legend = d3.select("#map").append("g")
     .attr("transform", "translate(100,60)")
+	.attr("class", "legend")
 
 var boroughName = function (d) {
 	d.properties.BoroName.replace(/ /g, '');
@@ -359,6 +360,7 @@ Promise.all([
 		// Draw the legend
 		legend = d3.select("#map").append("g")
 			.attr("transform", "translate(100,60)")
+			.attr("class", "legend")
 			.call(legendColor);
 
 		// slider 

@@ -14,16 +14,15 @@ var projection = d3.geoMercator()
 var path = d3.geoPath()
 	.projection(projection);
 
-var sliced = []; 
+var sliced = [];
 var crimeTypes = [];
-var inputValue = 1990;
-var dates = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+var inputValue = 2009;
 var allBoros = ['BROOKLYN', 'QUEENS', 'MANHATTAN', 'BRONX', 'STATEN ISLAND']
 
-var crime_boro_data = {'BROOKLYN': 0, 'QUEENS': 0, 'MANHATTAN': 0, 'BRONX': 0, 'STATEN ISLAND': 0}
+var crime_boro_data = { 'BROOKLYN': 0, 'QUEENS': 0, 'MANHATTAN': 0, 'BRONX': 0, 'STATEN ISLAND': 0 }
 
 var sortColorRange = (data) => {
-	return Object.values(data).sort((a, b) => a-b)
+	return Object.values(data).sort((a, b) => a - b)
 }
 
 // Data and color scale
@@ -38,7 +37,7 @@ var legendColor = d3.legendColor()
 	.scale(colorScale);
 
 var legend = d3.select("#map").append("g")
-    .attr("transform", "translate(100,60)")
+	.attr("transform", "translate(100,60)")
 	.attr("class", "legend")
 
 var boroughName = function (d) {
@@ -70,7 +69,7 @@ var getText = function (d) {
 				curr = crimeTypes[i];
 				if (filtered[inputValue][curr]) {
 					if (filtered[inputValue][curr][name.toUpperCase()]) {
-						console.log("!!!",crimeTypes)
+						console.log("!!!", crimeTypes)
 						c += filtered[inputValue][curr][name.toUpperCase()];
 					}
 				}
@@ -180,12 +179,25 @@ let chartMouseOut = function (d) {
 // all data functionality
 Promise.all([
 	d3.json("./data/boroughs.geojson"),
-	d3.csv("./data/NYC_Crime_Data(new1).csv"),
+	d3.csv("./data/crime_data_0.csv"),
+	d3.csv("./data/crime_data_1.csv"),
+	d3.csv("./data/crime_data_2.csv"),
+	d3.csv("./data/crime_data_3.csv"),
+	d3.csv("./data/crime_data_4.csv"),
+	d3.csv("./data/crime_data_5.csv"),
+	d3.csv("./data/crime_data_6.csv"),
+	d3.csv("./data/crime_data_7.csv"),
+	d3.csv("./data/crime_data_8.csv"),
+	d3.csv("./data/crime_data_9.csv"),
 ]).then(
 	(data, reg) => {
 		filtered = {}
 		let geo_data = data[0]
-		let crime_data = data[1]
+		let crime_data = []
+		for(var i = 1; i <= 10; i++) {
+			crime_data = crime_data.concat(data[i])
+		}
+		
 		// calculate year hash
 		for (var i = 0; i < crime_data.length; i++) {
 			var date = crime_data[i]["CMPLNT_FR_DT"]
@@ -196,7 +208,9 @@ Promise.all([
 				parts = date.split("/")
 			}
 			
+
 			var year = parts[2]
+			// console.log(year)
 			var name = [crime_data[i]["BORO_NM"]]
 			var crime = crime_data[i]['offense_id'];
 			var premise = crime_data[i]["PREM_TYP_DESC"];
@@ -205,21 +219,21 @@ Promise.all([
 				continue;
 			}
 			if (year < 1990) {
-                continue;
-            }
+				continue;
+			}
 			// all years all crimes
 			if (filtered["AllYears"]) {
 				if (filtered["AllYears"]["AllCrimes"]) {
-					if (filtered["AllYears"]["AllCrimes"]["P " + premise]) { 
+					if (filtered["AllYears"]["AllCrimes"]["P " + premise]) {
 						filtered["AllYears"]["AllCrimes"]["P " + premise] += 1
 					} else {
 						filtered["AllYears"]["AllCrimes"]["P " + premise] = 1
 					}
 					if (filtered["AllYears"]["AllCrimes"][name]) {
-                        filtered["AllYears"]["AllCrimes"][name] += 1
-                    } else {
-                        filtered["AllYears"]["AllCrimes"][name] = 1
-                    }
+						filtered["AllYears"]["AllCrimes"][name] += 1
+					} else {
+						filtered["AllYears"]["AllCrimes"][name] = 1
+					}
 				} else {
 					filtered["AllYears"]["AllCrimes"] = {}
 					filtered["AllYears"]["AllCrimes"][name] = 1
@@ -240,10 +254,10 @@ Promise.all([
 					filtered["AllYears"][crime]["P " + premise] = 1
 				}
 				if (filtered["AllYears"][crime][name]) {
-                    filtered["AllYears"][crime][name] += 1
-                } else {
-                    filtered["AllYears"][crime][name] = 1
-                }
+					filtered["AllYears"][crime][name] += 1
+				} else {
+					filtered["AllYears"][crime][name] = 1
+				}
 			} else {
 				filtered["AllYears"][crime] = {}
 				filtered["AllYears"][crime][name] = 1
@@ -253,16 +267,16 @@ Promise.all([
 			//specific year, all crimes 
 			if (filtered[year]) {
 				if (filtered[year]["AllCrimes"]) {
-					if (filtered[year]["AllCrimes"]["P " + premise]) { 
+					if (filtered[year]["AllCrimes"]["P " + premise]) {
 						filtered[year]["AllCrimes"]["P " + premise] += 1
 					} else {
 						filtered[year]["AllCrimes"]["P " + premise] = 1
 					}
 					if (filtered[year]["AllCrimes"][name]) {
-                        filtered[year]["AllCrimes"][name] += 1
-                    } else {
-                        filtered[year]["AllCrimes"][name] = 1
-                    }
+						filtered[year]["AllCrimes"][name] += 1
+					} else {
+						filtered[year]["AllCrimes"][name] = 1
+					}
 				} else {
 					filtered[year]["AllCrimes"] = {}
 					filtered[year]["AllCrimes"]["P " + premise] = 1
@@ -283,17 +297,19 @@ Promise.all([
 					filtered[year][crime]["P " + premise] = 1
 				}
 				if (filtered[year][crime][name]) {
-                    filtered[year][crime][name] += 1
-                } else {
-                    filtered[year][crime][name] = 1
-                }
+					filtered[year][crime][name] += 1
+				} else {
+					filtered[year][crime][name] = 1
+				}
 			} else {
 				filtered[year][crime] = {}
 				filtered[year][crime]["P " + premise] = 1
 				filtered[year][crime][name] = 1
 			}
+
 		}
 
+		console.log(filtered);
 
 		function handleCheckboxes() {
 			let newCounts = {}
@@ -325,7 +341,7 @@ Promise.all([
 			var crimeTypesTemp = []
 			// this forloop populated crimeTypes with the crimes that are selected 
 			for (var i = 0; i < checkboxes.length; i++) {
-				if (checkboxes[i].id != "timecheck" && checkboxes[i].id != "timeslide" && checkboxes[i].checked)  {
+				if (checkboxes[i].id != "timecheck" && checkboxes[i].id != "timeslide" && checkboxes[i].checked) {
 					crimeTypesTemp.push(checkboxes[i].id);
 				}
 			}
@@ -345,12 +361,12 @@ Promise.all([
 			.data(geo_data.features)
 			.enter()
 			.append("path")
-		// draw each country
+			// draw each country
 			.attr("d", d3.geoPath().projection(projection))
 			.attr("id", (d) => boroughName(d))
 			.attr("transform", "translate(200,120)")
-			
-		// set the color of each country
+
+			// set the color of each country
 			.attr("fill", function (d) {
 				return getMapCount(d);
 			})
@@ -405,7 +421,7 @@ Promise.all([
 					if (d3.select("#all").property("checked")) {
 						count = filtered["AllYears"]["AllCrimes"][name];
 					} else {
-						
+
 						for (var i = 0; i < crimeTypes.length; i++) {
 							curr = crimeTypes[i];
 							if (filtered["AllYears"][curr][name]) {
@@ -432,7 +448,7 @@ Promise.all([
 
 			domain = sortColorRange(crime_boro_data)
 			if (domain[4] == 0) {
-				domain = [0, 1] 
+				domain = [0, 1]
 			}
 			colorScale.domain(domain)
 			legend.call(legendColor);
@@ -448,8 +464,8 @@ Promise.all([
 		}
 
 		function updateBarStats() {
-			var premiseStats = {}; 
-			var currYear = ""	
+			var premiseStats = {};
+			var currYear = ""
 			if (d3.select("#timecheck").property("checked")) {
 				currYear = "AllYears";
 			} else {
@@ -460,14 +476,14 @@ Promise.all([
 			if (d3.select("#all").property("checked")) {
 				Object.keys(filtered[currYear]["AllCrimes"]).forEach(function (prem) {
 					premParts = prem.split(" ");
-                    if (prem.substring(0,2) == "P ") {
+					if (prem.substring(0, 2) == "P ") {
 						let location = prem.substring(2)
 						if (filtered[currYear]["AllCrimes"][prem]) {
 							if (premiseStats[location]) {
 								premiseStats[location] += filtered[currYear]["AllCrimes"][prem];
 							} else {
 								premiseStats[location] = filtered[currYear]["AllCrimes"][prem];
-							}	
+							}
 						} else {
 							if (premiseStats[location]) {
 								premiseStats[location] += 0;
@@ -476,36 +492,36 @@ Promise.all([
 							}
 						}
 					}
-				}) 
+				})
 			} else {
 				for (var i = 0; i < crimeTypes.length; i++) {
 					currCrime = crimeTypes[i];
 					if (filtered[currYear][currCrime]) {
 
-					Object.keys(filtered[currYear][currCrime]).forEach(function (prem) {
-						premParts = prem.split(" ");
-						let location = prem.substring(2)
-						if (prem.substring(0,2) == "P ") {
-							if (filtered[currYear][currCrime][prem]) {
-								if (premiseStats[location]) { 
-									premiseStats[location] += filtered[currYear][currCrime][prem];
+						Object.keys(filtered[currYear][currCrime]).forEach(function (prem) {
+							premParts = prem.split(" ");
+							let location = prem.substring(2)
+							if (prem.substring(0, 2) == "P ") {
+								if (filtered[currYear][currCrime][prem]) {
+									if (premiseStats[location]) {
+										premiseStats[location] += filtered[currYear][currCrime][prem];
+									} else {
+										premiseStats[location] = filtered[currYear][currCrime][prem];
+									}
 								} else {
-									premiseStats[location] = filtered[currYear][currCrime][prem];
-								}   
-							} else {
-								if (premiseStats[location]) { 
-									premiseStats[location] += 0;
-								} else {
-									premiseStats[location] = 0;
+									if (premiseStats[location]) {
+										premiseStats[location] += 0;
+									} else {
+										premiseStats[location] = 0;
+									}
 								}
 							}
-						}
-					})
+						})
 					}
-				}  
+				}
 
 			}
-			
+
 			// Create items array
 			var crimes = new Array(Object.keys(premiseStats).length);
 			i = 0
@@ -516,17 +532,17 @@ Promise.all([
 			})
 			// sort the locations based on count, in ascending order
 			crimes.sort((a, b) => (a.count > b.count) ? -1 : ((b.count > a.count) ? 1 : 0));
-			console.log("!!",crimes)
-            if (crimes.length < 5) {
-                prev = crimes.length;
-                for (var i = 0; i < 5-prev; i++) {
-                    crimes[i + prev] = { "type": "", "count": 0 }
-                }
-                sliced = crimes.slice(0,5);
-            } else {
-                sliced = crimes.slice(0,5);
-            }
-            console.log("!", sliced);
+			console.log("!!", crimes)
+			if (crimes.length < 5) {
+				prev = crimes.length;
+				for (var i = 0; i < 5 - prev; i++) {
+					crimes[i + prev] = { "type": "", "count": 0 }
+				}
+				sliced = crimes.slice(0, 5);
+			} else {
+				sliced = crimes.slice(0, 5);
+			}
+			console.log("!", sliced);
 		}
 
 		function updateBarChart() {
@@ -553,7 +569,7 @@ Promise.all([
 				.style("text-anchor", "end")
 				.attr("dx", "-.8em")
 				.attr("dy", ".15em")
-				.attr("transform", function(d) {
+				.attr("transform", function (d) {
 					return "rotate(-65)"
 				});
 
@@ -571,13 +587,13 @@ Promise.all([
 				.data(sliced)
 				.transition()
 				.duration(100)
-				.text( (d) => d.count + " crimes");
+				.text((d) => d.count + " crimes");
 		}
 
 		// bar graph setup
 		const yScale = d3.scaleLinear()
 			.range([200, 0])
-			.domain([0, 130000]);
+			.domain([0, 1500000]);
 
 		updateBarStats()
 		const xScale = d3.scaleBand()
@@ -586,24 +602,24 @@ Promise.all([
 			.padding(0.2)
 
 		const chart = d3.select("#bar").append('g')
-			.attr('transform', `translate(50, 50)`);
+			.attr('transform', `translate(60, 60)`);
 
 		// y axis
 		chart.append('g')
-		        .attr('id', 'yaxis')
+			.attr('id', 'yaxis')
 			.call(d3.axisLeft(yScale).ticks(5));
 
 		// x axis
 		chart.append('g')
-		        .attr('id', 'xaxis')
+			.attr('id', 'xaxis')
 			.attr('transform', `translate(0, 200)`)
 			.call(d3.axisBottom(xScale))
-			.selectAll("text")	
+			.selectAll("text")
 			.style("text-anchor", "end")
 			.attr("dx", "-.8em")
 			.attr("dy", ".15em")
-			.attr("transform", function(d) {
-				return "rotate(-65)" 
+			.attr("transform", function (d) {
+				return "rotate(-65)"
 			});
 
 		// bars
@@ -616,7 +632,7 @@ Promise.all([
 			.attr('height', (d) => 200 - yScale(d.count))
 			.attr('width', xScale.bandwidth())
 			.attr("class", function (d) { return "Bar" })
-			.style("fill", function(d) { return "#82ada9"})
+			.style("fill", function (d) { return "#82ada9" })
 			.on("mouseover", chartMouseOver)
 			.on("mousemove", chartMouseMove)
 			.on("mouseout", chartMouseOut);

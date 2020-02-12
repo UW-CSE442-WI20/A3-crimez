@@ -20,7 +20,6 @@ var inputValue = 2009;
 var allBoros = ['BROOKLYN', 'QUEENS', 'MANHATTAN', 'BRONX', 'STATEN ISLAND']
 
 var crime_boro_data = { 'BROOKLYN': 0, 'QUEENS': 0, 'MANHATTAN': 0, 'BRONX': 0, 'STATEN ISLAND': 0 }
-var currDomain = []
 
 var sortColorRange = (data) => {
 	return Object.values(data).sort((a, b) => a - b)
@@ -330,7 +329,6 @@ Promise.all([
 						document.getElementById("all").checked = false;
 					}
 				}
-			}
 
 			// crimtTypes holds all the crimes that are selected 
 
@@ -347,6 +345,7 @@ Promise.all([
 				.attr("fill", (d) => getMapCount(d, false));
 			updateBarStats()
 			updateBarChart()
+			}
 		}
 
 		// checkboxes
@@ -448,7 +447,7 @@ Promise.all([
 			} else if (d3.select("#all").property("checked") && d3.select("#timecheck").property("checked", false)) {
 				domain = [20000, 35000, 50000, 75000, 90000, 105000, 120000];
 			} else if (sliderCheck) {
-				domain = currDomain
+				domain = domain
 			} else {
 				sorted = sortColorRange(crime_boro_data)
 				lowest = sorted[0]
@@ -472,9 +471,7 @@ Promise.all([
 						domain.push(lowest + (range * i)) 
 					}
 				}
-
 			}
-			currDomain = domain
 
 			if (domain[4] == 0) {
 				domain = [0, 1]

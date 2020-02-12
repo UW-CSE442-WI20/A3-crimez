@@ -2,97 +2,130 @@
 <html>
 
 <head>
-	<meta charset="utf-8">
-	<title>A3-Crimez</title>
-	<link rel="stylesheet" type="text/css" href="index.css">
-	<script src="https://d3js.org/d3.v5.min.js" charset="utf-8"></script>
-	<script src="https://d3js.org/d3-color.v1.min.js"></script>
-	<script src="https://d3js.org/d3-interpolate.v1.min.js"></script>
-	<script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
-	<script src="https://d3js.org/d3-scale.v1.min.js"></script>
-	<script src="https://d3js.org/d3-format.v1.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.25.6/d3-legend.min.js"></script>
+    <meta charset="utf-8">
+    <title>A3-Crimez</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="index.css">
+    <script src="https://d3js.org/d3.v5.min.js" charset="utf-8"></script>
+    <script src="https://d3js.org/d3-color.v1.min.js"></script>
+    <script src="https://d3js.org/d3-interpolate.v1.min.js"></script>
+    <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+    <script src="https://d3js.org/d3-scale.v1.min.js"></script>
+    <script src="https://d3js.org/d3-format.v1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.25.6/d3-legend.min.js"></script>
+
 </head>
 
 <body>
-	<div id="titleContainer">
-		<h1 style = "font-family:optima" >Distribution of Crime Across New York City</h1>
-	</div>
-	<h2 style = "font-family:optima" >How do the crime stats vary across different types of crime based on time of year and location?</h2>
-	<script src="index.js"></script>
-	<!-- this container holds the whole visualization -->
-	<div id="container" class="flex">
-		<!-- this container holds the left side of the visualization (slider, checks, bar graph) -->
-		<div id="filtersAndBar" class = "flex">
-			<div id="sliderContainer">
-				<h3 style="font-family:optima">Filter by time:</h3>
-				<div class="month flex" id="months" style="margin: auto; text-align: center">
-					<div>
+    <div id="titleContainer">
+        <h2>How does the distribution of crimes in New York City change over time (2009-2018)?</h2>
+    </div>
+    <div id="overview">
+        <h3>Overview</h3>
+        <hr>
+        <p>
+            Through our interactive visualization, we want to show our users based on historic crime data of 2008-2018, which boroughs
+            in NYC are safest for a person to live in. We show this by asking the question of how the distribution of NYC
+            crime changed over time (2008-2018). This question was at a high level, so we chose to break it down into the
+            following subquestions:
+        </p>
+        <ol>
+            <li>How do the boroughs compare in terms of all crime count for a given year?</li>
+            <ol>
+                <li type="a">
+                    In which main premise types did crimes happen?
+                </li>
+            </ol>
+            <li>How do the boroughs compare in terms of the count of a subset of all crimes in a given year?</li>
+            <ol>
+                <li type="a">
+                    In which main premise types did crimes happen?                
+                </li>
+            </ol>
+        </ol>
+    </div>
+
+    <script src="index.js"></script>
+
+    <div id="overview">
+        <h3>Visualization</h3>
+        <hr>
+    </div>
+    <!-- this container holds the whole visualization -->
+    <div id="container" class="flex">
+        <!-- this container holds the left side of the visualization (slider, checks, bar graph) -->
+        <div id="filtersAndBar" class="flex">
+            <div id="sliderContainer">
+                <h3>Filter by time:</h3>
+                <div class="month flex" id="months" style="margin: auto; text-align: center">
+                    <div>
                         <label class="checkboxContainer" style="margin-left: 85px"> View All Years
                             <input type="checkbox" id="timecheck" checked="checked">
                             <span class="checkmark"></span>
                         </label>
                     </div>
-					<div>
-						<label id="range" style="font-size:15px; margin-left: 50px" style="opacity:0.4">Year: 1990</label>
-					</div>
-				</div>
-				<input id="timeslide" style="opacity:0.4" type="range" min="1990" max="2019" value="1990" step="1" disabled/>
-				<br>
-				<br>
-			</div>
-			<form class="flex checkboxes">
-				<div id="filters" class = "flex">
-					<div class="active" style="font-family:optima"><h3>Filter by crime type:</h3></div>
-					<div class="whatever flex" id="boxes" style="margin: auto">
-						<div>
-							<label class="checkboxContainer"> All 
-								<input type="checkbox" id="all" checked="checked">
-  								<span class="checkmark"></span>
-							</label>
-							<label class="checkboxContainer"> Assault 3
+                    <div>
+                        <label id="range" style="font-size:15px; margin-left: 50px" style="opacity:0.4">Year: 1990</label>
+                    </div>
+                </div>
+                <input id="timeslide" style="opacity:0.4" type="range" min="1990" max="2019" value="1990" step="1" disabled/>
+                <br>
+                <br>
+            </div>
+            <form class="flex checkboxes">
+                <div id="filters" class="flex">
+                    <div class="active">
+                        <h3>Filter by crime type:</h3>
+                    </div>
+                    <div class="whatever flex" id="boxes" style="margin: auto">
+                        <div>
+                            <label class="checkboxContainer"> All
+                                <input type="checkbox" id="all" checked="checked">
+                                <span class="checkmark"></span>
+                            </label>
+                            <label class="checkboxContainer"> Assault 3
                                 <input type="checkbox" id="4" checked="checked">
                                 <span class="checkmark"></span>
                             </label>
-							<label class="checkboxContainer"> Burglary
+                            <label class="checkboxContainer"> Burglary
                                 <input type="checkbox" id="9" checked="checked">
                                 <span class="checkmark"></span>
                             </label>
-							<label class="checkboxContainer"> Criminal mischief 
+                            <label class="checkboxContainer"> Criminal mischief
                                 <input type="checkbox" id="16" checked="checked">
                                 <span class="checkmark"></span>
                             </label>
-							 <label class="checkboxContainer"> Criminal trespass
+                            <label class="checkboxContainer"> Criminal trespass
                                 <input type="checkbox" id="19" checked="checked">
                                 <span class="checkmark"></span>
                             </label>
-							 <label class="checkboxContainer"> Dangerous drugs
+                            <label class="checkboxContainer"> Dangerous drugs
                                 <input type="checkbox" id="15" checked="checked">
                                 <span class="checkmark"></span>
                             </label>
-							 <label class="checkboxContainer"> Dangerous weapons
+                            <label class="checkboxContainer"> Dangerous weapons
                                 <input type="checkbox" id="13" checked="checked">
                                 <span class="checkmark"></span>
                             </label>
-							 <label class="checkboxContainer"> Felony assault
+                            <label class="checkboxContainer"> Felony assault
                                 <input type="checkbox" id="3" checked="checked">
                                 <span class="checkmark"></span>
                             </label>
-							 <label class="checkboxContainer"> Forgery
+                            <label class="checkboxContainer"> Forgery
                                 <input type="checkbox" id="12" checked="checked">
                                 <span class="checkmark"></span>
                             </label>
-							 <label class="checkboxContainer"> Fraud 
+                            <label class="checkboxContainer"> Fraud
                                 <input type="checkbox" id="18" checked="checked">
                                 <span class="checkmark"></span>
                             </label>
-							 <label class="checkboxContainer"> Grand larceny
+                            <label class="checkboxContainer"> Grand larceny
                                 <input type="checkbox" id="7" checked="checked">
                                 <span class="checkmark"></span>
                             </label>
-						</div>
-						<div>
-							<label class="checkboxContainer"> Grand larceny of motor vehicles
+                        </div>
+                        <div>
+                            <label class="checkboxContainer"> Grand larceny of motor vehicles
                                 <input type="checkbox" id="14" checked="checked">
                                 <span class="checkmark"></span>
                             </label>
@@ -100,49 +133,49 @@
                                 <input type="checkbox" id="6" checked="checked">
                                 <span class="checkmark"></span>
                             </label>
-                             <label class="checkboxContainer"> Intoxicated &amp; impaired driving
+                            <label class="checkboxContainer"> Intoxicated &amp; impaired driving
                                 <input type="checkbox" id="10" checked="checked">
                                 <span class="checkmark"></span>
                             </label>
-                             <label class="checkboxContainer"> Petit larceny
+                            <label class="checkboxContainer"> Petit larceny
                                 <input type="checkbox" id="2" checked="checked">
                                 <span class="checkmark"></span>
                             </label>
-                             <label class="checkboxContainer"> Miscellaneous Penal Law
+                            <label class="checkboxContainer"> Miscellaneous Penal Law
                                 <input type="checkbox" id="17" checked="checked">
                                 <span class="checkmark"></span>
                             </label>
-                             <label class="checkboxContainer"> Robbery
+                            <label class="checkboxContainer"> Robbery
                                 <input type="checkbox" id="1" checked="checked">
                                 <span class="checkmark"></span>
                             </label>
-                             <label class="checkboxContainer"> Sex crimes
+                            <label class="checkboxContainer"> Sex crimes
                                 <input type="checkbox" id="5" checked="checked">
                                 <span class="checkmark"></span>
                             </label>
-                             <label class="checkboxContainer"> Offenses against Public Administration
+                            <label class="checkboxContainer"> Offenses against Public Administration
                                 <input type="checkbox" id="20" checked="checked">
                                 <span class="checkmark"></span>
                             </label>
-                             <label class="checkboxContainer"> Offenses against Public Order
+                            <label class="checkboxContainer"> Offenses against Public Order
                                 <input type="checkbox" id="21" checked="checked">
                                 <span class="checkmark"></span>
                             </label>
-							<label class="checkboxContainer"> Theft-fraud
+                            <label class="checkboxContainer"> Theft-fraud
                                 <input type="checkbox" id="8" checked="checked">
                                 <span class="checkmark"></span>
                             </label>
-							<label class="checkboxContainer"> Vehicle and traffic laws 
+                            <label class="checkboxContainer"> Vehicle and traffic laws
                                 <input type="checkbox" id="11" checked="checked">
                                 <span class="checkmark"></span>
                             </label>
-						</div>
-					</div>
-				</div>
+                        </div>
+                    </div>
+                </div>
             </form>
             <div style="border:1px solid #82ada9; width: 100%;">
                 <div class="active">
-                    <h3 style="font-family:optima">Difference in crime stats among the five most common premises:</h3>
+                    <h3>Difference in crime stats among the five most common premises:</h3>
                 </div>
                 <div id="barGraph" class="flex" style="margin: auto">
                     <svg id="bar" width="400" height="400" style="margin: auto"></svg>
@@ -150,10 +183,10 @@
             </div>
         </div>
 
-		<div class="flex">
-			<svg id="map" width="1200" height="800"></svg>
-		</div>
-	</div>
+        <div class="flex">
+            <svg id="map" width="1200" height="800"></svg>
+        </div>
+    </div>
 </body>
 
 </html>

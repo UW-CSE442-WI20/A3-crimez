@@ -1,5 +1,14 @@
+body {
+    font-family: 'Roboto', sans-serif;
+    margin-left: 5%;
+    margin-right: 5%;
+    width: 85%;
+}
+
+
 /* Customize the label (the container) */
 .checkboxContainer {
+  font-family: 'Roboto', sans-serif !important;
   display: block;
   position: relative;
   padding-left: 25px;
@@ -102,13 +111,13 @@
 	border-radius: 10px 10px 0 0 ;
 }
 
-#titleContainer {
+/* #titleContainer {
     text-align: center;
     max-width:700px;
    	margin:auto;
     border:1px solid #82ada9;
     border-radius: 10px;
-}
+} */
 
 rect {
     fill: #82ada9;
@@ -148,4 +157,8 @@ label {
     color:black;
     font-family: optima;
 }
+
+/* #overview {
+    width: 90%;
+} */
 

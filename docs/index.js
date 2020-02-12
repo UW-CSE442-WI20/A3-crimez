@@ -20,6 +20,7 @@ var inputValue = 2009;
 var allBoros = ['BROOKLYN', 'QUEENS', 'MANHATTAN', 'BRONX', 'STATEN ISLAND']
 
 var crime_boro_data = { 'BROOKLYN': 0, 'QUEENS': 0, 'MANHATTAN': 0, 'BRONX': 0, 'STATEN ISLAND': 0 }
+var currDomain = []
 
 var sortColorRange = (data) => {
 	return Object.values(data).sort((a, b) => a - b)
@@ -29,7 +30,7 @@ var sortColorRange = (data) => {
 var domain = []
 var data = d3.map();
 var colorScale = d3.scaleThreshold()
-	.range(d3.schemePurples[5]);
+	.range(d3.schemePurples[7]);
 
 var legendColor = d3.legendColor()
 	.labelFormat(d3.format(".0f"))
@@ -69,7 +70,6 @@ var getText = function (d) {
 				curr = crimeTypes[i];
 				if (filtered[inputValue][curr]) {
 					if (filtered[inputValue][curr][name.toUpperCase()]) {
-						console.log("!!!", crimeTypes)
 						c += filtered[inputValue][curr][name.toUpperCase()];
 					}
 				}
@@ -210,7 +210,6 @@ Promise.all([
 			
 
 			var year = parts[2]
-			// console.log(year)
 			var name = [crime_data[i]["BORO_NM"]]
 			var crime = crime_data[i]['offense_id'];
 			var premise = crime_data[i]["PREM_TYP_DESC"];
@@ -309,8 +308,6 @@ Promise.all([
 
 		}
 
-		console.log(filtered);
-
 		function handleCheckboxes() {
 			let newCounts = {}
 			value = this.id;
@@ -347,7 +344,7 @@ Promise.all([
 			}
 			crimeTypes = JSON.parse(JSON.stringify(crimeTypesTemp));
 			d3.selectAll(".Borough")
-				.attr("fill", getMapCount);
+				.attr("fill", (d) => getMapCount(d, false));
 			updateBarStats()
 			updateBarChart()
 		}
@@ -368,7 +365,7 @@ Promise.all([
 
 			// set the color of each country
 			.attr("fill", function (d) {
-				return getMapCount(d);
+				return getMapCount(d, false);
 			})
 			.attr("class", function (d) { return "Borough" })
 			.on("mouseover", mapMouseOver)
@@ -408,13 +405,13 @@ Promise.all([
 			}
 
 			d3.selectAll(".Borough")
-				.attr("fill", getMapCount);
+				.attr("fill", (d) => getMapCount(d, true));
 
 			updateBarStats();
 			updateBarChart();
 		}
 
-		function updateDomain() {
+		function updateDomain(sliderCheck) {
 			allBoros.forEach((name) => {
 				let count = 0;
 				if (d3.select("#timecheck").property("checked")) {
@@ -446,7 +443,39 @@ Promise.all([
 				crime_boro_data[name] = count;
 			})
 
-			domain = sortColorRange(crime_boro_data)
+			if (d3.select("#all").property("checked") && d3.select("#timecheck").property("checked")) {
+				domain = [200000, 400000, 600000, 800000, 1000000, 1200000, 1400000];
+			} else if (d3.select("#all").property("checked") && d3.select("#timecheck").property("checked", false)) {
+				domain = [20000, 35000, 50000, 75000, 90000, 105000, 120000];
+			} else if (sliderCheck) {
+				domain = currDomain
+			} else {
+				sorted = sortColorRange(crime_boro_data)
+				lowest = sorted[0]
+				highest = sorted[4]
+				if (sorted[4] == 0) {
+					domain = [1, 2, 3, 4, 5, 6, 7]
+				} else {
+					lowest_mod = lowest % 100
+					lowest = lowest - lowest_mod
+
+					range = highest / 6
+					range_mod = range % 50
+					if (range_mod == range) {
+						range = 100;
+					} else {
+					        range = range - range_mod
+					}
+
+					domain = []
+					for (var i = 0; i < 7; i++) {
+						domain.push(lowest + (range * i)) 
+					}
+				}
+
+			}
+			currDomain = domain
+
 			if (domain[4] == 0) {
 				domain = [0, 1]
 			}
@@ -456,8 +485,8 @@ Promise.all([
 
 
 		// fetchs data based on date selections
-		function getMapCount(d) {
-			updateDomain()
+		function getMapCount(d, sliderCheck) {
+			updateDomain(sliderCheck)
 			var name = d.properties.BoroName.toUpperCase();
 			var count = crime_boro_data[name]
 			return colorScale(count);
@@ -532,7 +561,6 @@ Promise.all([
 			})
 			// sort the locations based on count, in ascending order
 			crimes.sort((a, b) => (a.count > b.count) ? -1 : ((b.count > a.count) ? 1 : 0));
-			console.log("!!", crimes)
 			if (crimes.length < 5) {
 				prev = crimes.length;
 				for (var i = 0; i < 5 - prev; i++) {
@@ -542,7 +570,6 @@ Promise.all([
 			} else {
 				sliced = crimes.slice(0, 5);
 			}
-			console.log("!", sliced);
 		}
 
 		function updateBarChart() {

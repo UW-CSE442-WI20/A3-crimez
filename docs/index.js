@@ -37,6 +37,9 @@ var legendColor = d3.legendColor()
 	.labels(d3.legendHelpers.thresholdLabels)
 	.scale(colorScale);
 
+var legend = d3.select("#map").append("g")
+    .attr("transform", "translate(100,60)")
+
 var boroughName = function (d) {
 	d.properties.BoroName.replace(/ /g, '');
 }
@@ -355,13 +358,8 @@ Promise.all([
 
 		// Draw the legend
 		legend = d3.select("#map").append("g")
-			.attr("transform", "translate(800,50)")
+			.attr("transform", "translate(100,60)")
 			.call(legendColor);
-
-		var legend = d3.legendColor()
-			.scale(colorScale)
-			.labelFormat(d3.format(".0f"))
-			.title("Legend");
 
 		// slider 
 		d3.select("#timeslide").on("input", function () {
@@ -433,7 +431,9 @@ Promise.all([
 				domain = [0, 1] 
 			}
 			colorScale.domain(domain)
+			legend.call(legendColor);
 		}
+
 
 		// fetchs data based on date selections
 		function getMapCount(d) {

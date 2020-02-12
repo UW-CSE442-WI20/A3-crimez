@@ -17,7 +17,6 @@ var path = d3.geoPath()
 var sliced = [];
 var crimeTypes = [];
 var inputValue = 1990;
-var dates = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 var allBoros = ['BROOKLYN', 'QUEENS', 'MANHATTAN', 'BRONX', 'STATEN ISLAND']
 
 var crime_boro_data = { 'BROOKLYN': 0, 'QUEENS': 0, 'MANHATTAN': 0, 'BRONX': 0, 'STATEN ISLAND': 0 }
@@ -180,16 +179,16 @@ let chartMouseOut = function (d) {
 // all data functionality
 Promise.all([
 	d3.json("./data/boroughs.geojson"),
-	d3.csv("./data/data/crime_data_0.csv"),
-	d3.csv("./data/data/crime_data_1.csv"),
-	d3.csv("./data/data/crime_data_2.csv"),
-	d3.csv("./data/data/crime_data_3.csv"),
-	d3.csv("./data/data/crime_data_4.csv"),
-	d3.csv("./data/data/crime_data_5.csv"),
-	d3.csv("./data/data/crime_data_6.csv"),
-	d3.csv("./data/data/crime_data_7.csv"),
-	d3.csv("./data/data/crime_data_8.csv"),
-	d3.csv("./data/data/crime_data_9.csv"),
+	d3.csv("./data/crime_data_0.csv"),
+	d3.csv("./data/crime_data_1.csv"),
+	d3.csv("./data/crime_data_2.csv"),
+	d3.csv("./data/crime_data_3.csv"),
+	d3.csv("./data/crime_data_4.csv"),
+	d3.csv("./data/crime_data_5.csv"),
+	d3.csv("./data/crime_data_6.csv"),
+	d3.csv("./data/crime_data_7.csv"),
+	d3.csv("./data/crime_data_8.csv"),
+	d3.csv("./data/crime_data_9.csv"),
 ]).then(
 	(data, reg) => {
 		filtered = {}

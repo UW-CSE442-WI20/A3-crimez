@@ -612,14 +612,14 @@ Promise.all([
 			updateBarStats()
 			const yScale = d3.scaleBand()
 				.range([300, 0])
-				.domain(sliced.map((d) => d.type))
-				.padding(0.2);
+				.domain(sliced.map((d) => d.type.replace(" ", "\n")))
+				.padding(0.2)
 
 			// x axis
 			d3.select("#xaxis")
 				.transition()
 				.duration(1000)
-				.call(d3.axisBottom(xScale).tickValues(tick_values));
+				.call(d3.axisBottom(xScale).tickValues(tick_values))
 
 			// y axis
 			d3.select("#yaxis")
@@ -627,6 +627,7 @@ Promise.all([
 				.duration(1000)
 				.call(d3.axisLeft(yScale))
 				.selectAll("text")
+				.call(wrap, 30)
 				.style("text-anchor", "end");
 
 			// bars
@@ -635,7 +636,7 @@ Promise.all([
 				.transition()
 				.duration(1000)
 				.attr('x', 10)
-				.attr('y', (d) => yScale(d.type))
+				.attr('y', (d) => yScale(d.type.replace(" ", "\n")))
 				.attr('width', (d) => xScale(d.count))
 				.attr("class", (d) => "Bar")
 				.style("fill", (d) => "#82ada9")
@@ -660,7 +661,7 @@ Promise.all([
 		updateBarStats()
 		const yScale = d3.scaleBand()
 			.range([300, 0])
-			.domain(sliced.map((d) => d.type))
+			.domain(sliced.map((d) => d.type.replace(" ", "\n")))
 			.padding(0.2)
 
 		const chart = d3.select("#bar").append('g')
@@ -684,6 +685,8 @@ Promise.all([
 			.attr('transform', `translate(9, 0)`)
 			.call(d3.axisLeft(yScale))
 			.selectAll("text")
+			.call(wrap, 30)
+			.attr('transform', `translate(0, 5)`)
 			.style("text-anchor", "end");
 
 		// text label for the y axis
@@ -701,7 +704,7 @@ Promise.all([
 			.enter()
 			.append('rect')
 			.attr('x', 10)
-			.attr('y', (d) => yScale(d.type))
+			.attr('y', (d) => yScale(d.type.replace(" ", "\n")))
 			.attr('width', (d) => xScale(d.count))
 			.attr('height', yScale.bandwidth())
 			.attr("class", (d) => "Bar")
@@ -714,3 +717,36 @@ Promise.all([
 	}).catch(function (err) {
 		console.log(err)
 	})
+
+function wrap(text, width) {
+    text.each(function () {
+        var text = d3.select(this),
+            words = text.text().split(/\s+/).reverse(),
+            word,
+            line = [],
+            lineNumber = 0,
+            lineHeight = 1.1, // ems
+            x = text.attr("x"),
+            y = text.attr("y"),
+            dy = 0, //parseFloat(text.attr("dy")),
+            tspan = text.text(null)
+                        .append("tspan")
+                        .attr("x", x)
+                        .attr("y", y)
+                        .attr("dy", dy + "em");
+        while (word = words.pop()) {
+            line.push(word);
+            tspan.text(line.join(" "));
+            if (tspan.node().getComputedTextLength() > width) {
+                line.pop();
+                tspan.text(line.join(" "));
+                line = [word];
+                tspan = text.append("tspan")
+                            .attr("x", x)
+                            .attr("y", y)
+                            .attr("dy", ++lineNumber * lineHeight + dy + "em")
+                            .text(word);
+            }
+        }
+    });
+}

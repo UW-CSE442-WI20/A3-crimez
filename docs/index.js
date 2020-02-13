@@ -568,7 +568,10 @@ Promise.all([
 						key = "APARTMENT";
 					}
 				}
-
+				if (key.includes("LOT/GARAGE")) {
+                    var parts = key.split(" ");
+					key = parts[0] + " " + parts[2]
+                }
 				crimes[i] = { "type": key, "count": value }
 				i++
 			})

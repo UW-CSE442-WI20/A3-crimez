@@ -193,10 +193,10 @@ Promise.all([
 		filtered = {}
 		let geo_data = data[0]
 		let crime_data = []
-		for(var i = 1; i <= 10; i++) {
+		for (var i = 1; i <= 10; i++) {
 			crime_data = crime_data.concat(data[i])
 		}
-		
+
 		// calculate year hash
 		for (var i = 0; i < crime_data.length; i++) {
 			var date = crime_data[i]["CMPLNT_FR_DT"]
@@ -206,7 +206,7 @@ Promise.all([
 			} else {
 				parts = date.split("/")
 			}
-			
+
 
 			var year = parts[2]
 			var name = [crime_data[i]["BORO_NM"]]
@@ -330,21 +330,28 @@ Promise.all([
 					}
 				}
 
-			// crimtTypes holds all the crimes that are selected 
 
-			checkboxes = document.getElementsByTagName("input");
-			var crimeTypesTemp = []
-			// this forloop populated crimeTypes with the crimes that are selected 
-			for (var i = 0; i < checkboxes.length; i++) {
-				if (checkboxes[i].id != "timecheck" && checkboxes[i].id != "timeslide" && checkboxes[i].checked) {
-					crimeTypesTemp.push(checkboxes[i].id);
+				// crimtTypes holds all the crimes that are selected 
+
+				checkboxes = document.getElementsByTagName("input");
+				var crimeTypesTemp = []
+				// this forloop populated crimeTypes with the crimes that are selected 
+				for (var i = 0; i < checkboxes.length; i++) {
+					if (checkboxes[i].id != "timecheck" && checkboxes[i].id != "timeslide" && checkboxes[i].checked) {
+						crimeTypesTemp.push(checkboxes[i].id);
+					}
 				}
-			}
-			crimeTypes = JSON.parse(JSON.stringify(crimeTypesTemp));
-			d3.selectAll(".Borough")
-				.attr("fill", (d) => getMapCount(d, false));
-			updateBarStats()
-			updateBarChart()
+
+				if (crimeTypesTemp.length == 21) {
+					document.getElementById("all").checked = true;
+				}
+
+
+				crimeTypes = JSON.parse(JSON.stringify(crimeTypesTemp));
+				d3.selectAll(".Borough")
+					.attr("fill", (d) => getMapCount(d, false));
+				updateBarStats()
+				updateBarChart()
 			}
 		}
 
@@ -463,12 +470,12 @@ Promise.all([
 					if (range_mod == range) {
 						range = 100;
 					} else {
-					        range = range - range_mod
+						range = range - range_mod
 					}
 
 					domain = []
 					for (var i = 0; i < 7; i++) {
-						domain.push(lowest + (range * i)) 
+						domain.push(lowest + (range * i))
 					}
 				}
 			}
@@ -553,10 +560,10 @@ Promise.all([
 			i = 0
 			Object.keys(premiseStats).forEach(function (key) {
 				var value = premiseStats[key]
-				if(key.includes("RESIDENCE")){
+				if (key.includes("RESIDENCE")) {
 					key = key.split("-")[1].trim();
 
-					if(key.includes("APT. HOUSE")) {
+					if (key.includes("APT. HOUSE")) {
 						key = "APARTMENT";
 					}
 				}
@@ -672,4 +679,4 @@ Promise.all([
 
 	}).catch(function (err) {
 		console.log(err)
-	}) 
+	})

@@ -664,7 +664,7 @@ Promise.all([
 			.padding(0.2)
 
 		const chart = d3.select("#bar").append('g')
-			.attr('transform', `translate(90, 60)`);
+			.attr('transform', `translate(150, 60)`);
 
 		// x axis
 		chart.append('g')
@@ -689,7 +689,7 @@ Promise.all([
 		// text label for the y axis
 		chart.append("text")
 			.attr("transform", "rotate(-90)")
-			.attr("y", -100)
+			.attr("y", -150)
 			.attr("x", -150)
 			.attr("dy", "1em")
 			.style("text-anchor", "middle")

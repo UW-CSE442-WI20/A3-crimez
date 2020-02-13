@@ -585,41 +585,47 @@ Promise.all([
 		}
 
 		function updateBarChart() {
-			const yScale = d3.scaleLinear()
-				.range([200, 0])
+			const xScale = d3.scaleLinear()
+				.range([0, 275])
 				.domain([0, d3.max(sliced, (d) => d.count)]);
 
-			const xScale = d3.scaleBand()
-				.range([0, 300])
+			// needed for domain of yscale
+			updateBarStats()
+			const yScale = d3.scaleBand()
+				.range([300, 0])
 				.domain(sliced.map((d) => d.type))
 				.padding(0.2)
 
-			d3.select("#yaxis")
-				.transition()
-				.duration(1000)
-				.call(d3.axisLeft(yScale).ticks(5));
+			const chart = d3.select("#bar").append('g')
+				.attr('transform', `translate(90, 60)`);
 
+			// x axis
 			d3.select("#xaxis")
 				.transition()
 				.duration(1000)
-				.attr('transform', `translate(0, 200)`)
-				.call(d3.axisBottom(xScale))
+				.call(d3.axisBottom(xScale).ticks(4));
+
+			// y axis
+			d3.select("#yaxis")
+				.transition()
+				.duration(1000)
+				.call(d3.axisLeft(yScale))
 				.selectAll("text")
 				.style("text-anchor", "end")
-				.attr("dx", "-.8em")
-				.attr("dy", ".15em")
-				.attr("transform", function (d) {
-					return "rotate(-65)"
-				});
 
+			// bars
 			d3.selectAll(".Bar")
 				.data(sliced)
 				.transition()
 				.duration(1000)
-				.attr('x', (d) => xScale(d.type))
-				.attr('y', (d) => yScale(d.count))
-				.attr('height', (d) => 200 - yScale(d.count))
-				.attr('fill', "#80cbc4");
+				.attr('x', 10)
+				.attr('y', (d) => yScale(d.type))
+				.attr('width', (d) => xScale(d.count))
+				.attr("class", function (d) { return "Bar" })
+				.style("fill", function (d) { return "#82ada9" })
+				.on("mouseover", chartMouseOver)
+				.on("mousemove", chartMouseMove)
+				.on("mouseout", chartMouseOut);
 
 			tooltip.style("top", (d3.event.pageY - 10) + "px")
 				.style("left", (d3.event.pageX + 10) + "px")
@@ -630,46 +636,43 @@ Promise.all([
 		}
 
 		// bar graph setup
-		const yScale = d3.scaleLinear()
-			.range([200, 0])
+		const xScale = d3.scaleLinear()
+			.range([0, 275])
 			.domain([0, 1500000]);
 
+		// needed for domain of yscale
 		updateBarStats()
-		const xScale = d3.scaleBand()
-			.range([0, 300])
+		const yScale = d3.scaleBand()
+			.range([300, 0])
 			.domain(sliced.map((d) => d.type))
 			.padding(0.2)
 
 		const chart = d3.select("#bar").append('g')
-			.attr('transform', `translate(60, 60)`);
-
-		// y axis
-		chart.append('g')
-			.attr('id', 'yaxis')
-			.call(d3.axisLeft(yScale).ticks(5));
+			.attr('transform', `translate(90, 60)`);
 
 		// x axis
 		chart.append('g')
 			.attr('id', 'xaxis')
-			.attr('transform', `translate(0, 200)`)
-			.call(d3.axisBottom(xScale))
+			.attr('transform', `translate(9, 300)`)
+			.call(d3.axisBottom(xScale).ticks(4));
+
+		// y axis
+		chart.append('g')
+			.attr('id', 'yaxis')
+			.attr('transform', `translate(10, 0)`)
+			.call(d3.axisLeft(yScale))
 			.selectAll("text")
 			.style("text-anchor", "end")
-			.attr("dx", "-.8em")
-			.attr("dy", ".15em")
-			.attr("transform", function (d) {
-				return "rotate(-65)"
-			});
 
 		// bars
 		chart.selectAll()
 			.data(sliced)
 			.enter()
 			.append('rect')
-			.attr('x', (d) => xScale(d.type))
-			.attr('y', (d) => yScale(d.count))
-			.attr('height', (d) => 200 - yScale(d.count))
-			.attr('width', xScale.bandwidth())
+			.attr('x', 10)
+			.attr('y', (d) => yScale(d.type))
+			.attr('width', (d) => xScale(d.count))
+			.attr('height', yScale.bandwidth())
 			.attr("class", function (d) { return "Bar" })
 			.style("fill", function (d) { return "#82ada9" })
 			.on("mouseover", chartMouseOver)

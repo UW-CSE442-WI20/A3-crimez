@@ -1,20 +1,8 @@
-## TODO
-- apply filters to bar graph (check back when full data is in - criminal trespass)
-- styling
-- color scale configuration
-- **IF TIME** apply map as filter for bar graph
+### Our site
+See the live site at: [UW-CSE442-WI20.github.io/A3-crimez/](https://uw-cse442-wi20.github.io/A3-crimez/)
 
-## Question: What does the distribution of crime look like in NYC in 2014-2015 (time and place)?
-### Visualizations
-- map showing amount of crime per area
-  - time
-  - based on crime
-  - based on type of place
-- bar graph  
-
-### Current Branches in use
- - master: all the basics :)
- - fix_scale: work for making the coloring dynamic 
+### Our data comes from: 
+https://data.cityofnewyork.us/Public-Safety/NYPD-Complaint-Data-Historic/qgea-i56i
  
 ### How to run our code locally
 
@@ -25,9 +13,6 @@ Run `npm start` in the root direction or `python -m SimpleHTTPServer`
 (For Lior: py -2 -m SimpleHTTPServer)
 
 
-### Our site
-
-See the live site at: [UW-CSE442-WI20.github.io/A3-crimez/](https://uw-cse442-wi20.github.io/A3-crimez/)
 
 _Relevant instructions from the original template:_
 

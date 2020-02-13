@@ -589,6 +589,21 @@ Promise.all([
 				.range([0, 275])
 				.domain([0, d3.max(sliced, (d) => d.count)]);
 
+			var highest = d3.max(sliced, (d) => d.count)
+			tick_values = []
+			range = highest / 4
+			range_mod = range % 50
+			if (range_mod == range) {
+				range = 100;
+			} else {
+				range = range - range_mod
+			}
+
+			for (var i = 0; i < 4; i++) {
+				tick_values.push(0 + (range * i))
+			}
+
+
 			// needed for domain of yscale
 			updateBarStats()
 			const yScale = d3.scaleBand()
@@ -603,7 +618,7 @@ Promise.all([
 			d3.select("#xaxis")
 				.transition()
 				.duration(1000)
-				.call(d3.axisBottom(xScale).ticks(4));
+				.call(d3.axisBottom(xScale).tickValues(tick_values));
 
 			// y axis
 			d3.select("#yaxis")
@@ -653,7 +668,7 @@ Promise.all([
 		// x axis
 		chart.append('g')
 			.attr('id', 'xaxis')
-			.attr('transform', `translate(9, 300)`)
+			.attr('transform', `translate(8, 300)`)
 			.call(d3.axisBottom(xScale).ticks(4));
 
 		// y axis

@@ -638,7 +638,7 @@ Promise.all([
 				.attr('y', (d) => yScale(d.type))
 				.attr('width', (d) => xScale(d.count))
 				.attr("class", (d) => "Bar")
-				.style("fill", (d) => "#82ada9" )
+				.style("fill", (d) => "#82ada9")
 				.on("mouseover", chartMouseOver)
 				.on("mousemove", chartMouseMove)
 				.on("mouseout", chartMouseOut);
@@ -672,6 +672,12 @@ Promise.all([
 			.attr('transform', `translate(9, 300)`)
 			.call(d3.axisBottom(xScale).ticks(4));
 
+		// text label for the x-axis
+		chart.append("text")
+			.attr('transform', `translate(150, 340)`)
+			.style("text-anchor", "middle")
+			.text("Crime Count");
+
 		// y axis
 		chart.append('g')
 			.attr('id', 'yaxis')
@@ -679,6 +685,15 @@ Promise.all([
 			.call(d3.axisLeft(yScale))
 			.selectAll("text")
 			.style("text-anchor", "end");
+
+		// text label for the y axis
+		chart.append("text")
+			.attr("transform", "rotate(-90)")
+			.attr("y", -100)
+			.attr("x", -150)
+			.attr("dy", "1em")
+			.style("text-anchor", "middle")
+			.text("Premise type");
 
 		// bars
 		chart.selectAll()
@@ -690,7 +705,7 @@ Promise.all([
 			.attr('width', (d) => xScale(d.count))
 			.attr('height', yScale.bandwidth())
 			.attr("class", (d) => "Bar")
-			.style("fill", (d) => "#82ada9" )
+			.style("fill", (d) => "#82ada9")
 			.on("mouseover", chartMouseOver)
 			.on("mousemove", chartMouseMove)
 			.on("mouseout", chartMouseOut);

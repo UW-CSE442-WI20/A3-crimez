@@ -311,43 +311,44 @@ Promise.all([
 			let newCounts = {}
 			value = this.id;
 
-			if (value != "timecheck" && value != "timeslide") {
-				if (value == "all") {
-					if (document.getElementById("all").checked) {
-						checkboxes = document.getElementsByTagName("input");
-						for (var i = 1; i < checkboxes.length; i++) {
-							checkboxes[i].checked = true;
+			if (value != "timeslide") {
+				if (value != "timecheck") {
+					if (value == "all") {
+						if (document.getElementById("all").checked) {
+							checkboxes = document.getElementsByTagName("input");
+							for (var i = 1; i < checkboxes.length; i++) {
+								checkboxes[i].checked = true;
+							}
+						} else {
+							checkboxes = document.getElementsByTagName("input");
+							for (var i = 1; i < checkboxes.length; i++) {
+								checkboxes[i].checked = false;
+							}
 						}
 					} else {
-						checkboxes = document.getElementsByTagName("input");
-						for (var i = 1; i < checkboxes.length; i++) {
-							checkboxes[i].checked = false;
+						if (!document.getElementsByName(value).checked) {
+							document.getElementById("all").checked = false;
 						}
 					}
-				} else {
-					if (!document.getElementsByName(value).checked) {
-						document.getElementById("all").checked = false;
+
+
+					// crimtTypes holds all the crimes that are selected 
+
+					checkboxes = document.getElementsByTagName("input");
+					var crimeTypesTemp = []
+					// this forloop populated crimeTypes with the crimes that are selected 
+					for (var i = 0; i < checkboxes.length; i++) {
+						if (checkboxes[i].id != "timecheck" && checkboxes[i].id != "timeslide" && checkboxes[i].checked) {
+							crimeTypesTemp.push(checkboxes[i].id);
+						}
 					}
-				}
 
-
-				// crimtTypes holds all the crimes that are selected 
-
-				checkboxes = document.getElementsByTagName("input");
-				var crimeTypesTemp = []
-				// this forloop populated crimeTypes with the crimes that are selected 
-				for (var i = 0; i < checkboxes.length; i++) {
-					if (checkboxes[i].id != "timecheck" && checkboxes[i].id != "timeslide" && checkboxes[i].checked) {
-						crimeTypesTemp.push(checkboxes[i].id);
+					if (crimeTypesTemp.length == 21) {
+						document.getElementById("all").checked = true;
 					}
+					crimeTypes = JSON.parse(JSON.stringify(crimeTypesTemp));
+
 				}
-
-				if (crimeTypesTemp.length == 21) {
-					document.getElementById("all").checked = true;
-				}
-
-
-				crimeTypes = JSON.parse(JSON.stringify(crimeTypesTemp));
 				d3.selectAll(".Borough")
 					.attr("fill", (d) => getMapCount(d, false));
 				updateBarStats()
@@ -590,29 +591,29 @@ Promise.all([
 				.domain([0, d3.max(sliced, (d) => d.count)]);
 
 			var highest = d3.max(sliced, (d) => d.count)
-			tick_values = []
-			range = highest / 4
-			range_mod = range % 50
-			if (range_mod == range) {
-				range = 100;
+			if (highest == 0) {
+				tick_values = [0, 0, 0, 0]
 			} else {
-				range = range - range_mod
-			}
+				tick_values = []
+				range = highest / 4
+				range_mod = range % 50
+				if (range_mod == range) {
+					range = 100;
+				} else {
+					range = range - range_mod
+				}
 
-			for (var i = 0; i < 4; i++) {
-				tick_values.push(0 + (range * i))
+				for (var i = 0; i < 4; i++) {
+					tick_values.push(0 + (range * i))
+				}
 			}
-
 
 			// needed for domain of yscale
 			updateBarStats()
 			const yScale = d3.scaleBand()
 				.range([300, 0])
 				.domain(sliced.map((d) => d.type))
-				.padding(0.2)
-
-			const chart = d3.select("#bar").append('g')
-				.attr('transform', `translate(90, 60)`);
+				.padding(0.2);
 
 			// x axis
 			d3.select("#xaxis")
@@ -626,7 +627,7 @@ Promise.all([
 				.duration(1000)
 				.call(d3.axisLeft(yScale))
 				.selectAll("text")
-				.style("text-anchor", "end")
+				.style("text-anchor", "end");
 
 			// bars
 			d3.selectAll(".Bar")
@@ -636,8 +637,8 @@ Promise.all([
 				.attr('x', 10)
 				.attr('y', (d) => yScale(d.type))
 				.attr('width', (d) => xScale(d.count))
-				.attr("class", function (d) { return "Bar" })
-				.style("fill", function (d) { return "#82ada9" })
+				.attr("class", (d) => "Bar")
+				.style("fill", (d) => "#82ada9" )
 				.on("mouseover", chartMouseOver)
 				.on("mousemove", chartMouseMove)
 				.on("mouseout", chartMouseOut);
@@ -668,16 +669,16 @@ Promise.all([
 		// x axis
 		chart.append('g')
 			.attr('id', 'xaxis')
-			.attr('transform', `translate(8, 300)`)
+			.attr('transform', `translate(9, 300)`)
 			.call(d3.axisBottom(xScale).ticks(4));
 
 		// y axis
 		chart.append('g')
 			.attr('id', 'yaxis')
-			.attr('transform', `translate(10, 0)`)
+			.attr('transform', `translate(9, 0)`)
 			.call(d3.axisLeft(yScale))
 			.selectAll("text")
-			.style("text-anchor", "end")
+			.style("text-anchor", "end");
 
 		// bars
 		chart.selectAll()
@@ -688,8 +689,8 @@ Promise.all([
 			.attr('y', (d) => yScale(d.type))
 			.attr('width', (d) => xScale(d.count))
 			.attr('height', yScale.bandwidth())
-			.attr("class", function (d) { return "Bar" })
-			.style("fill", function (d) { return "#82ada9" })
+			.attr("class", (d) => "Bar")
+			.style("fill", (d) => "#82ada9" )
 			.on("mouseover", chartMouseOver)
 			.on("mousemove", chartMouseMove)
 			.on("mouseout", chartMouseOut);

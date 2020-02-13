@@ -2,9 +2,9 @@
 ###### Lior Levy, Amir Mola, Emma Raible, Heather Harvey, Kushal Jhunjhunwalla
  
 Through our interactive visualization, we want to show our users historic crime data from 2009-2018 to determine which boroughs in NYC are safest for a person to live in. We show this by asking the question of **how has the distribution of NYC crime changed over the last 10 years**. This was a high level question, so we chose to break it down into the following sub questions:
-- How do the boroughs compare in terms of all crime count for a given year? 
+- How do the boroughs compare in terms of all crime count for a given year/ all time? 
   - In which main premise types did crimes happen?
-- How do the boroughs compare in terms of the count of a subset of all crime types in a given year?
+- How do the boroughs compare in terms of the count of a subset of all crime types in a given year/ all time?
   - In which main premise types did crimes happen?
   
 For our final interactive visualization, we use a map and a bar graph which can both be filtered by year and crime type. The map is broken down into the 5 boroughs of NYC. As the year and crime filters change affect the colors of the colors of the boroughs change in accordance. The map addresses our main guiding questions, while the sub questions are answered in the bar graph that demonstrates the counts for the top 5 premise types where crimes occurred. Both the graph and map are affected by the filters simultaneously. 

@@ -553,6 +553,14 @@ Promise.all([
 			i = 0
 			Object.keys(premiseStats).forEach(function (key) {
 				var value = premiseStats[key]
+				if(key.includes("RESIDENCE")){
+					key = key.split("-")[1].trim();
+
+					if(key.includes("APT. HOUSE")) {
+						key = "APARTMENT";
+					}
+				}
+
 				crimes[i] = { "type": key, "count": value }
 				i++
 			})

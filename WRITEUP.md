@@ -2,7 +2,7 @@
 ###### Lior Levy, Amir Mola, Emma Raible, Heather Harvey, Kushal Jhunjhunwalla
  
 Through our interactive visualization, we want to show our users historic crime data from 2009-2018 to determine which boroughs in NYC are safest for a person to live in. We show this by asking the question of **how has the distribution of NYC crime changed over the last 10 years**. This was a high level question, so we chose to break it down into the following sub questions:
-- How do the boroughs compare in terms of all crime types for a given year/ all time? 
+- How do the boroughs compare in terms of all crimes for a given year/ all time? 
   - In which main premise types did crimes happen?
 - How do the boroughs compare in terms of the count of a subset of all crime types in a given year/ all time?
   - In which main premise types did crimes happen?

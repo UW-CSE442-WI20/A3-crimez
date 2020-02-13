@@ -3,6 +3,9 @@ See the live site at: [UW-CSE442-WI20.github.io/A3-crimez/](https://uw-cse442-wi
 
 ### Our data comes from: 
 https://data.cityofnewyork.us/Public-Safety/NYPD-Complaint-Data-Historic/qgea-i56i
+
+### Our Write Up
+We have included the link to our write up in the website, but just to be sure, the write up is in our repo.
  
 ### How to run our code locally
 
